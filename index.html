@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全加密工具 - Secure Crypto Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 安全加密工具</h1>
+            <p class="subtitle">Secure Encryption & Decryption Tool</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('encrypt', event)">
+                <span class="icon">🔐</span> 加密 Encrypt
+            </button>
+            <button class="tab-button" onclick="switchTab('decrypt', event)">
+                <span class="icon">🔓</span> 解密 Decrypt
+            </button>
+        </div>
+
+        <div id="encrypt-tab" class="tab-content active">
+            <div class="input-section">
+                <label for="encrypt-input">输入要加密的内容 (Enter content to encrypt):</label>
+                <textarea id="encrypt-input" placeholder="在此输入您的代码或文本... Enter your code or text here..."></textarea>
+            </div>
+
+            <div class="password-section">
+                <label for="encrypt-password">加密密码 (Encryption Password):</label>
+                <div class="password-input-group">
+                    <input type="password" id="encrypt-password" placeholder="输入强密码... Enter a strong password...">
+                    <button class="toggle-password" onclick="togglePassword('encrypt-password')" title="显示/隐藏密码 Show/Hide">
+                        👁️
+                    </button>
+                </div>
+                <div class="password-strength" id="encrypt-strength"></div>
+            </div>
+
+            <button class="action-button" onclick="encryptText()">
+                <span class="icon">🔐</span> 加密内容 Encrypt Content
+            </button>
+
+            <div class="output-section" id="encrypt-output-section" style="display: none;">
+                <label>加密结果 (Encrypted Result):</label>
+                <textarea id="encrypt-output" readonly></textarea>
+                <div class="button-group">
+                    <button class="secondary-button" onclick="copyToClipboard('encrypt-output')">
+                        📋 复制 Copy
+                    </button>
+                    <button class="secondary-button" onclick="downloadText('encrypt-output', 'encrypted.txt')">
+                        💾 下载 Download
+                    </button>
+                    <button class="secondary-button" onclick="clearEncrypt()">
+                        🗑️ 清除 Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="decrypt-tab" class="tab-content">
+            <div class="input-section">
+                <label for="decrypt-input">输入要解密的内容 (Enter encrypted content):</label>
+                <textarea id="decrypt-input" placeholder="粘贴加密的文本... Paste encrypted text here..."></textarea>
+            </div>
+
+            <div class="password-section">
+                <label for="decrypt-password">解密密码 (Decryption Password):</label>
+                <div class="password-input-group">
+                    <input type="password" id="decrypt-password" placeholder="输入密码... Enter password...">
+                    <button class="toggle-password" onclick="togglePassword('decrypt-password')" title="显示/隐藏密码 Show/Hide">
+                        👁️
+                    </button>
+                </div>
+            </div>
+
+            <button class="action-button" onclick="decryptText()">
+                <span class="icon">🔓</span> 解密内容 Decrypt Content
+            </button>
+
+            <div class="output-section" id="decrypt-output-section" style="display: none;">
+                <label>解密结果 (Decrypted Result):</label>
+                <textarea id="decrypt-output" readonly></textarea>
+                <div class="button-group">
+                    <button class="secondary-button" onclick="copyToClipboard('decrypt-output')">
+                        📋 复制 Copy
+                    </button>
+                    <button class="secondary-button" onclick="downloadText('decrypt-output', 'decrypted.txt')">
+                        💾 下载 Download
+                    </button>
+                    <button class="secondary-button" onclick="clearDecrypt()">
+                        🗑️ 清除 Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>📖 使用说明 Usage Guide</h3>
+            <ul>
+                <li>✨ 使用 AES-256 加密算法，确保数据安全 | Uses AES-256 encryption for security</li>
+                <li>🔑 请使用强密码（至少8位，包含字母、数字、符号）| Use a strong password (at least 8 characters with letters, numbers, symbols)</li>
+                <li>💾 加密后的文本可复制或下载保存 | Encrypted text can be copied or downloaded</li>
+                <li>🔒 请妥善保管您的密码，丢失密码将无法解密 | Keep your password safe; lost passwords cannot decrypt data</li>
+                <li>📱 完全支持iPad和移动设备 | Fully compatible with iPad and mobile devices</li>
+                <li>🌐 所有操作在本地浏览器完成，无需网络 | All operations are performed locally in your browser</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>🔐 Secure Crypto Tool - 完全在本地运行，保护您的隐私 | Runs entirely locally to protect your privacy</p>
+        </footer>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
