@@ -1,3 +1,37 @@
+// Derive encryption key from password using PBKDF2
+async function deriveKey(password) {
+    const encoder = new TextEncoder();
+    const passwordData = encoder.encode(password);
+    
+    // Import password as key material
+    const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        passwordData,
+        { name: 'PBKDF2' },
+        false,
+        ['deriveBits', 'deriveKey']
+    );
+    
+    // Use a fixed salt for consistency (in production, use random salt and store it)
+    const salt = encoder.encode('SecureCryptoTool2024');
+    
+    // Derive actual encryption key
+    const key = await crypto.subtle.deriveKey(
+        {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: 100000,
+            hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+    );
+    
+    return key;
+}
+
 // Tab Switching
 function switchTab(tabName) {
     // Hide all tabs
@@ -62,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Encrypt Text
-function encryptText() {
+// Encrypt Text using Web Crypto API
+async function encryptText() {
     const input = document.getElementById('encrypt-input').value;
     const password = document.getElementById('encrypt-password').value;
 
@@ -83,10 +117,35 @@ function encryptText() {
     }
 
     try {
-        // Encrypt using AES-256
-        const encrypted = CryptoJS.AES.encrypt(input, password).toString();
+        // Show processing
+        showNotification('正在加密... Encrypting...', 'info');
+
+        // Convert password to key
+        const key = await deriveKey(password);
         
-        document.getElementById('encrypt-output').value = encrypted;
+        // Generate random IV
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        
+        // Encode the text
+        const encoder = new TextEncoder();
+        const data = encoder.encode(input);
+        
+        // Encrypt
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            data
+        );
+        
+        // Combine IV and encrypted data
+        const combined = new Uint8Array(iv.length + encrypted.byteLength);
+        combined.set(iv);
+        combined.set(new Uint8Array(encrypted), iv.length);
+        
+        // Convert to base64
+        const base64 = btoa(String.fromCharCode(...combined));
+        
+        document.getElementById('encrypt-output').value = base64;
         document.getElementById('encrypt-output-section').style.display = 'block';
         
         showNotification('✓ 加密成功 Encryption successful!', 'success');
@@ -95,8 +154,8 @@ function encryptText() {
     }
 }
 
-// Decrypt Text
-function decryptText() {
+// Decrypt Text using Web Crypto API
+async function decryptText() {
     const input = document.getElementById('decrypt-input').value;
     const password = document.getElementById('decrypt-password').value;
 
@@ -111,9 +170,31 @@ function decryptText() {
     }
 
     try {
-        // Decrypt using AES-256
-        const decrypted = CryptoJS.AES.decrypt(input, password);
-        const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+        // Show processing
+        showNotification('正在解密... Decrypting...', 'info');
+
+        // Convert password to key
+        const key = await deriveKey(password);
+        
+        // Decode from base64
+        const combined = new Uint8Array(
+            atob(input).split('').map(c => c.charCodeAt(0))
+        );
+        
+        // Extract IV and encrypted data
+        const iv = combined.slice(0, 12);
+        const encrypted = combined.slice(12);
+        
+        // Decrypt
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            encrypted
+        );
+        
+        // Decode the text
+        const decoder = new TextDecoder();
+        const plaintext = decoder.decode(decrypted);
 
         if (!plaintext) {
             throw new Error('密码错误或数据损坏 Invalid password or corrupted data');
@@ -124,7 +205,7 @@ function decryptText() {
         
         showNotification('✓ 解密成功 Decryption successful!', 'success');
     } catch (error) {
-        showNotification('解密失败 Decryption failed: ' + error.message, 'error');
+        showNotification('解密失败 Decryption failed: 密码错误或数据损坏 Invalid password or corrupted data', 'error');
         document.getElementById('decrypt-output').value = '';
     }
 }
