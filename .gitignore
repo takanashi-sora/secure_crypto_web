@@ -16,6 +16,8 @@ npm-debug.log*
 # Temporary files
 /tmp/
 .tmp/
+__pycache__/
+*.pyc
 
 # Build artifacts (if any are added in the future)
 /dist/
