@@ -55,6 +55,15 @@ npx serve
 
 然后在浏览器中访问 `http://localhost:8000`
 
+### Python 桌面版工具 (单文件) / Python Desktop Tool (Single File)
+
+项目新增 `secure_crypto_tool.py`，提供与网页版相同的 AES-256-GCM + PBKDF2-SHA256(100000 次) 加密逻辑和双语图形界面。
+
+```bash
+pip install "cryptography>=46.0.5"
+python secure_crypto_tool.py
+```
+
 ## 📦 部署到 GitHub Pages Deploy to GitHub Pages
 
 ### 方法 1: 使用 GitHub 界面 (推荐)
