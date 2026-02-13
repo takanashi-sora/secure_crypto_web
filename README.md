@@ -59,6 +59,16 @@ npx serve
 
 ## 📦 部署到 GitHub Pages Deploy to GitHub Pages
 
+### 快速部署（推荐，3 分钟）
+
+1. 把代码推到 GitHub 仓库（例如 `secure_crypto_web`）
+2. 打开仓库：**Settings** → **Pages**
+3. 在 **Source** 里选择：
+   - Branch: `main`
+   - Folder: `/ (root)`
+4. 点击 **Save**，等待 1~5 分钟
+5. 访问：`https://<你的GitHub用户名>.github.io/<仓库名>/`
+
 ### 方法 1: 使用 GitHub 界面 (推荐)
 
 1. 进入仓库的 **Settings** (设置)
