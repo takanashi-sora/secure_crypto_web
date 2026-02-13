@@ -1,0 +1,27 @@
+# Development files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+/tmp/
+.tmp/
+
+# Build artifacts (if any are added in the future)
+/dist/
+/build/
+
+# Dependencies (if any are added in the future)
+node_modules/
+package-lock.json
+yarn.lock

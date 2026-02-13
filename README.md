@@ -16,7 +16,9 @@ A beautiful, secure web-based encryption/decryption tool that can be deployed on
 
 ## 🚀 在线使用 Live Demo
 
-访问 GitHub Pages 部署的版本：`https://[your-username].github.io/secure_crypto_web/`
+访问 GitHub Pages 部署的版本：`https://takanashi-sora.github.io/secure_crypto_web/`
+
+部署后即可直接使用，无需任何配置！
 
 ## 📖 使用说明 Usage Guide
 
@@ -55,11 +57,33 @@ npx serve
 
 ## 📦 部署到 GitHub Pages Deploy to GitHub Pages
 
-1. 进入仓库的 Settings
-2. 找到 Pages 选项
-3. 在 Source 下选择 `main` 分支和 `/ (root)` 目录
-4. 点击 Save
-5. 等待几分钟后，你的应用就会发布到 `https://[your-username].github.io/secure_crypto_web/`
+### 方法 1: 使用 GitHub 界面 (推荐)
+
+1. 进入仓库的 **Settings** (设置)
+2. 在左侧菜单找到 **Pages** 选项
+3. 在 **Source** (源) 下选择：
+   - Branch: `main` (或你的默认分支)
+   - Folder: `/ (root)`
+4. 点击 **Save** (保存)
+5. 等待几分钟，GitHub 会自动构建和部署
+6. 部署完成后，访问：`https://takanashi-sora.github.io/secure_crypto_web/`
+
+### 方法 2: 使用 GitHub Actions (自动化)
+
+GitHub Pages 会自动检测静态网站并部署，无需额外配置！
+
+### 验证部署
+
+部署成功后，你会在 Pages 设置页面看到：
+> ✅ Your site is live at https://takanashi-sora.github.io/secure_crypto_web/
+
+## ⚙️ 配置说明
+
+本应用是纯静态网站，无需任何后端服务器或数据库：
+- ✅ 直接部署到 GitHub Pages
+- ✅ 可部署到任何静态网站托管服务 (Netlify, Vercel, Cloudflare Pages 等)
+- ✅ 可在本地文件系统直接打开 `index.html` 使用
+- ✅ 所有加密操作在浏览器本地完成
 
 ## 🔐 安全提示 Security Notes
 
