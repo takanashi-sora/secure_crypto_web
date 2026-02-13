@@ -74,7 +74,7 @@ npx serve
 - HTML5
 - CSS3 (响应式设计)
 - JavaScript (ES6+)
-- CryptoJS (AES-256 加密库)
+- Web Crypto API (Native browser AES-256 encryption)
 
 ## 📄 许可证 License
 

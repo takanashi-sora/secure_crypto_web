@@ -1,5 +1,5 @@
 // Derive encryption key from password using PBKDF2
-async function deriveKey(password) {
+async function deriveKey(password, saltString = null) {
     const encoder = new TextEncoder();
     const passwordData = encoder.encode(password);
     
@@ -12,8 +12,15 @@ async function deriveKey(password) {
         ['deriveBits', 'deriveKey']
     );
     
-    // Use a fixed salt for consistency (in production, use random salt and store it)
-    const salt = encoder.encode('SecureCryptoTool2024');
+    // Generate or use provided salt
+    let salt;
+    if (saltString) {
+        // Decode salt from base64
+        salt = Uint8Array.from(atob(saltString), c => c.charCodeAt(0));
+    } else {
+        // Generate random salt for encryption
+        salt = crypto.getRandomValues(new Uint8Array(16));
+    }
     
     // Derive actual encryption key
     const key = await crypto.subtle.deriveKey(
@@ -29,11 +36,11 @@ async function deriveKey(password) {
         ['encrypt', 'decrypt']
     );
     
-    return key;
+    return { key, salt };
 }
 
 // Tab Switching
-function switchTab(tabName) {
+function switchTab(tabName, event) {
     // Hide all tabs
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
@@ -120,8 +127,8 @@ async function encryptText() {
         // Show processing
         showNotification('正在加密... Encrypting...', 'info');
 
-        // Convert password to key
-        const key = await deriveKey(password);
+        // Convert password to key with random salt
+        const { key, salt } = await deriveKey(password);
         
         // Generate random IV
         const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -137,10 +144,11 @@ async function encryptText() {
             data
         );
         
-        // Combine IV and encrypted data
-        const combined = new Uint8Array(iv.length + encrypted.byteLength);
-        combined.set(iv);
-        combined.set(new Uint8Array(encrypted), iv.length);
+        // Combine salt, IV and encrypted data
+        const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+        combined.set(salt);
+        combined.set(iv, salt.length);
+        combined.set(new Uint8Array(encrypted), salt.length + iv.length);
         
         // Convert to base64
         const base64 = btoa(String.fromCharCode(...combined));
@@ -173,17 +181,21 @@ async function decryptText() {
         // Show processing
         showNotification('正在解密... Decrypting...', 'info');
 
-        // Convert password to key
-        const key = await deriveKey(password);
-        
         // Decode from base64
         const combined = new Uint8Array(
             atob(input).split('').map(c => c.charCodeAt(0))
         );
         
-        // Extract IV and encrypted data
-        const iv = combined.slice(0, 12);
-        const encrypted = combined.slice(12);
+        // Extract salt, IV and encrypted data
+        const salt = combined.slice(0, 16);
+        const iv = combined.slice(16, 28);
+        const encrypted = combined.slice(28);
+        
+        // Convert salt to base64 string for deriveKey
+        const saltBase64 = btoa(String.fromCharCode(...salt));
+        
+        // Convert password to key using the extracted salt
+        const { key } = await deriveKey(password, saltBase64);
         
         // Decrypt
         const decrypted = await crypto.subtle.decrypt(
@@ -195,10 +207,6 @@ async function decryptText() {
         // Decode the text
         const decoder = new TextDecoder();
         const plaintext = decoder.decode(decrypted);
-
-        if (!plaintext) {
-            throw new Error('密码错误或数据损坏 Invalid password or corrupted data');
-        }
 
         document.getElementById('decrypt-output').value = plaintext;
         document.getElementById('decrypt-output-section').style.display = 'block';
@@ -239,7 +247,7 @@ function copyToClipboard(elementId) {
 // Fallback copy method
 function fallbackCopy(element) {
     element.select();
-    element.setSelectionRange(0, 99999); // For mobile devices
+    element.setSelectionRange(0, element.value.length);
 
     try {
         document.execCommand('copy');
