@@ -263,7 +263,10 @@ class SecureCryptoApp:
             self.decrypt_output.delete("1.0", "end")
             self.decrypt_output.insert("1.0", plaintext)
             self._notify("✓ 解密成功 Decryption successful!", "success")
-        except (InvalidTag, ValueError, binascii.Error):
+        except binascii.Error:
+            self.decrypt_output.delete("1.0", "end")
+            self._notify("解密失败 Decryption failed: 非法的加密文本格式 Invalid encrypted text format", "error")
+        except (InvalidTag, ValueError):
             self.decrypt_output.delete("1.0", "end")
             self._notify("解密失败 Decryption failed: 密码错误或数据损坏 Invalid password or corrupted data", "error")
 
