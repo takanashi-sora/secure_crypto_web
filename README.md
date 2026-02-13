@@ -16,7 +16,7 @@ A beautiful, secure web-based encryption/decryption tool that can be deployed on
 
 ## 🚀 在线使用 Live Demo
 
-GitHub Pages 链接格式为：`https://<你的GitHub用户名>.github.io/<仓库名>/`
+GitHub Pages 链接格式为：`https://your-username.github.io/your-repo-name/`
 
 例如本仓库应为：`https://takanashi-sora.github.io/secure_crypto_web/`（仅在 Pages 部署成功后可访问）
 
@@ -67,7 +67,7 @@ npx serve
    - Branch: `main`
    - Folder: `/ (root)`
 4. 点击 **Save**，等待 1~5 分钟
-5. 访问：`https://<你的GitHub用户名>.github.io/<仓库名>/`
+5. 访问：`https://your-username.github.io/your-repo-name/`
 
 ### 方法 1: 使用 GitHub 界面 (推荐)
 
@@ -78,7 +78,7 @@ npx serve
    - Folder: `/ (root)`
 4. 点击 **Save** (保存)
 5. 等待几分钟，GitHub 会自动构建和部署
-6. 部署完成后，按以下格式访问：`https://<你的GitHub用户名>.github.io/<仓库名>/`
+6. 部署完成后，按以下格式访问：`https://your-username.github.io/your-repo-name/`
 
 ### 方法 2: 使用 GitHub Actions (自动化)
 
@@ -87,7 +87,7 @@ GitHub Pages 会自动检测静态网站并部署，无需额外配置！
 ### 验证部署
 
 部署成功后，你会在 Pages 设置页面看到：
-> ✅ Your site is live at https://<你的GitHub用户名>.github.io/<仓库名>/
+> ✅ Your site is live at https://your-username.github.io/your-repo-name/
 
 ### 常见 404 原因排查（GitHub Pages）
 
