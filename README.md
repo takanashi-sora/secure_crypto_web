@@ -16,7 +16,9 @@ A beautiful, secure web-based encryption/decryption tool that can be deployed on
 
 ## 🚀 在线使用 Live Demo
 
-访问 GitHub Pages 部署的版本：`https://takanashi-sora.github.io/secure_crypto_web/`
+GitHub Pages 链接格式为：`https://your-username.github.io/your-repo-name/`
+
+例如本仓库应为：`https://takanashi-sora.github.io/secure_crypto_web/`（仅在 Pages 部署成功后可访问）
 
 部署后即可直接使用，无需任何配置！
 
@@ -57,6 +59,16 @@ npx serve
 
 ## 📦 部署到 GitHub Pages Deploy to GitHub Pages
 
+### 快速部署（推荐，3 分钟）
+
+1. 把代码推到 GitHub 仓库（例如 `secure_crypto_web`）
+2. 打开仓库：**Settings** → **Pages**
+3. 在 **Source** 里选择：
+   - Branch: `main`
+   - Folder: `/ (root)`
+4. 点击 **Save**，等待 1~5 分钟
+5. 访问：`https://your-username.github.io/your-repo-name/`
+
 ### 方法 1: 使用 GitHub 界面 (推荐)
 
 1. 进入仓库的 **Settings** (设置)
@@ -66,7 +78,7 @@ npx serve
    - Folder: `/ (root)`
 4. 点击 **Save** (保存)
 5. 等待几分钟，GitHub 会自动构建和部署
-6. 部署完成后，访问：`https://takanashi-sora.github.io/secure_crypto_web/`
+6. 部署完成后，按以下格式访问：`https://your-username.github.io/your-repo-name/`
 
 ### 方法 2: 使用 GitHub Actions (自动化)
 
@@ -75,7 +87,14 @@ GitHub Pages 会自动检测静态网站并部署，无需额外配置！
 ### 验证部署
 
 部署成功后，你会在 Pages 设置页面看到：
-> ✅ Your site is live at https://takanashi-sora.github.io/secure_crypto_web/
+> ✅ Your site is live at https://your-username.github.io/your-repo-name/
+
+### 常见 404 原因排查（GitHub Pages）
+
+- 仓库名或用户名和链接不一致（包括大小写、连字符/下划线）
+- Pages Source 没有设置为正确分支/目录（建议 `main` + `/root`）
+- 刚保存 Pages 配置，部署尚未完成（通常需要几分钟）
+- 仓库是私有仓库但账号/套餐不支持对应的 Pages 发布方式
 
 ## ⚙️ 配置说明
 
