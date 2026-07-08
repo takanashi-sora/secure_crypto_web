@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Sora Photo Vault · GitHub 相册</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg2: #111827;
+      --panel: rgba(255, 255, 255, 0.10);
+      --panel-strong: rgba(255, 255, 255, 0.16);
+      --line: rgba(255, 255, 255, 0.18);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --soft: #94a3b8;
+      --accent: #8b5cf6;
+      --accent2: #06b6d4;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --danger: #fb7185;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.36), transparent 32%),
+        radial-gradient(circle at 82% 18%, rgba(6, 182, 212, 0.30), transparent 30%),
+        radial-gradient(circle at 50% 92%, rgba(244, 114, 182, 0.22), transparent 34%),
+        linear-gradient(135deg, #020617, #0f172a 48%, #111827);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 82%);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 38px 0 64px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.13), rgba(255,255,255,0.07));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .title-card {
+      padding: 34px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .title-card::after {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      right: -72px;
+      top: -86px;
+      background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 62%);
+      border-radius: 999px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(15,23,42,0.34);
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(36px, 6vw, 72px);
+      letter-spacing: -0.06em;
+      line-height: 0.95;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #fff, #c4b5fd 42%, #67e8f9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.72;
+      margin: 0;
+    }
+
+    .stat-card {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+      align-content: center;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.42);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .stat b {
+      display: block;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+    }
+
+    .stat span {
+      color: var(--soft);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+      padding: 16px;
+      margin-bottom: 22px;
+      align-items: center;
+    }
+
+    .search {
+      width: 100%;
+      padding: 14px 16px;
+      color: var(--text);
+      background: rgba(15,23,42,0.58);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .search:focus { border-color: rgba(139, 92, 246, 0.72); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18); }
+
+    button, .button-like {
+      appearance: none;
+      border: 0;
+      border-radius: 16px;
+      color: white;
+      cursor: pointer;
+      padding: 13px 16px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 16px 34px rgba(6,182,212,0.18);
+      transition: transform .18s ease, filter .18s ease, background .18s ease;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    button:hover, .button-like:hover { transform: translateY(-2px); filter: brightness(1.06); }
+    button:disabled { cursor: not-allowed; opacity: 0.55; transform: none; }
+
+    .ghost {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: none;
+    }
+
+    .danger { background: linear-gradient(135deg, #f43f5e, #fb7185); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .side {
+      padding: 20px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .side h2, .main h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.13);
+      color: var(--text);
+      outline: none;
+      background: rgba(15,23,42,0.54);
+    }
+
+    .hint {
+      color: var(--soft);
+      font-size: 12px;
+      line-height: 1.6;
+      margin: 10px 0 0;
+    }
+
+    .dropzone {
+      border: 1.5px dashed rgba(255,255,255,0.30);
+      background: rgba(15,23,42,0.36);
+      border-radius: 22px;
+      padding: 22px;
+      text-align: center;
+      transition: border .18s ease, background .18s ease, transform .18s ease;
+      margin: 16px 0;
+    }
+
+    .dropzone.dragover {
+      border-color: #67e8f9;
+      background: rgba(6, 182, 212, 0.14);
+      transform: scale(1.01);
+    }
+
+    .dropzone .icon { font-size: 38px; display: block; margin-bottom: 8px; }
+    .dropzone p { margin: 0; color: var(--muted); line-height: 1.65; }
+    .dropzone small { color: var(--soft); }
+    #fileInput { display: none; }
+
+    .progress-wrap {
+      margin-top: 14px;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .progress-bar i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .18s ease;
+    }
+
+    .log {
+      margin-top: 10px;
+      max-height: 132px;
+      overflow: auto;
+      color: var(--soft);
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .main {
+      min-height: 480px;
+      padding: 20px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 16px;
+    }
+
+    .photo-card {
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(15,23,42,0.44);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.24);
+      min-height: 240px;
+      display: grid;
+      grid-template-rows: 170px auto;
+      animation: rise .28s ease both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .thumb {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      display: block;
+      background: rgba(255,255,255,0.08);
+      cursor: zoom-in;
+    }
+
+    .meta {
+      padding: 12px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 750;
+      font-size: 13px;
+    }
+
+    .sub {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--soft);
+      font-size: 12px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 38px;
+      gap: 8px;
+    }
+
+    .actions button, .actions a {
+      padding: 9px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .empty {
+      border: 1px dashed rgba(255,255,255,0.22);
+      background: rgba(15,23,42,0.28);
+      border-radius: 22px;
+      padding: 44px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .notice {
+      margin-top: 14px;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(245, 158, 11, 0.34);
+      background: rgba(245, 158, 11, 0.10);
+      color: #fde68a;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(15,23,42,0.94);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      z-index: 20;
+      transition: opacity .2s ease, transform .2s ease;
+      max-width: min(720px, calc(100% - 32px));
+      text-align: center;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: rgba(2,6,23,0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-inner {
+      width: min(1080px, 100%);
+      max-height: 92vh;
+      display: grid;
+      gap: 12px;
+    }
+
+    .modal img {
+      max-width: 100%;
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 22px;
+      margin: 0 auto;
+      display: block;
+      box-shadow: var(--shadow);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .modal-title {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 880px) {
+      .hero { grid-template-columns: 1fr; }
+      .layout { grid-template-columns: 1fr; }
+      .side { position: static; }
+      .toolbar { grid-template-columns: 1fr; }
+      h1 { font-size: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="title-card glass">
+        <div class="eyebrow">📷 GitHub Pages Photo Vault</div>
+        <h1><span class="gradient-text">Sora Photo Vault</span></h1>
+        <p class="lead">一个直接把照片存进 GitHub 仓库的在线相册。拖拽上传、自动命名、精美瀑布式浏览、原图预览、复制直链、删除文件都可以在这个页面完成。</p>
+      </div>
+      <aside class="stat-card glass">
+        <div class="stat"><b id="photoCount">0</b><span>仓库照片数量</span></div>
+        <div class="stat"><b id="totalSize">0 MB</b><span>当前已加载体积</span></div>
+        <div class="stat"><b id="repoStatus">未连接</b><span>GitHub API 状态</span></div>
+      </aside>
+    </section>
+
+    <section class="toolbar glass">
+      <input id="searchInput" class="search" placeholder="搜索照片文件名，例如 Numazu、Aqours、2026..." />
+      <button id="refreshBtn" type="button">🔄 刷新相册</button>
+      <button id="chooseBtn" class="ghost" type="button">⬆️ 选择照片</button>
+    </section>
+
+    <section class="layout">
+      <aside class="side glass">
+        <h2>上传设置</h2>
+        <div class="field">
+          <label for="tokenInput">GitHub Token <span>仅保存在本机浏览器</span></label>
+          <input id="tokenInput" type="password" autocomplete="off" placeholder="github_pat_..." />
+        </div>
+        <div class="field">
+          <label for="ownerInput">Owner</label>
+          <input id="ownerInput" value="takanashi-sora" />
+        </div>
+        <div class="field">
+          <label for="repoInput">Repository</label>
+          <input id="repoInput" value="secure_crypto_web" />
+        </div>
+        <div class="field">
+          <label for="branchInput">Branch</label>
+          <input id="branchInput" value="main" />
+        </div>
+        <div class="field">
+          <label for="folderInput">图片目录</label>
+          <input id="folderInput" value="photo-gallery/photos" />
+        </div>
+        <button id="saveSettingsBtn" type="button" style="width:100%">💾 保存本机设置</button>
+
+        <div id="dropzone" class="dropzone">
+          <span class="icon">🌌</span>
+          <p>把照片拖到这里上传<br><small>支持 jpg / png / gif / webp / avif，多选上传</small></p>
+        </div>
+        <input id="fileInput" type="file" accept="image/*" multiple />
+
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar"><i id="progressBar"></i></div>
+          <div class="log" id="uploadLog"></div>
+        </div>
+
+        <p class="hint">上传会调用 GitHub Contents API，把图片写入仓库目录。不要把 Token 粘贴给别人，也不要提交到仓库里。建议使用只允许本仓库 Contents 读写的 fine-grained token。</p>
+        <div class="notice">注意：当前仓库是公开仓库，所以上传的照片也会公开。GitHub 适合存放少量展示图片，不建议当作大量原图网盘使用。</div>
+      </aside>
+
+      <section class="main glass">
+        <h2>照片墙</h2>
+        <div id="gallery" class="gallery"></div>
+        <div id="empty" class="empty" style="display:none;">还没有加载到照片。保存 Token 后上传几张，或点击“刷新相册”。</div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-inner">
+      <div class="modal-top">
+        <div id="modalTitle" class="modal-title"></div>
+        <button id="closeModalBtn" class="ghost" type="button">关闭 ✕</button>
+      </div>
+      <img id="modalImg" alt="preview" />
+    </div>
+  </div>
+
+  <script>
+    const DEFAULTS = {
+      owner: 'takanashi-sora',
+      repo: 'secure_crypto_web',
+      branch: 'main',
+      folder: 'photo-gallery/photos'
+    };
+
+    const IMAGE_EXTS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.bmp', '.svg'];
+    const state = { photos: [], filtered: [] };
+
+    const $ = (id) => document.getElementById(id);
+    const els = {
+      token: $('tokenInput'), owner: $('ownerInput'), repo: $('repoInput'), branch: $('branchInput'), folder: $('folderInput'),
+      gallery: $('gallery'), empty: $('empty'), photoCount: $('photoCount'), totalSize: $('totalSize'), repoStatus: $('repoStatus'),
+      search: $('searchInput'), refresh: $('refreshBtn'), choose: $('chooseBtn'), file: $('fileInput'), dropzone: $('dropzone'),
+      save: $('saveSettingsBtn'), progressWrap: $('progressWrap'), progressBar: $('progressBar'), log: $('uploadLog'),
+      toast: $('toast'), modal: $('modal'), modalImg: $('modalImg'), modalTitle: $('modalTitle'), closeModal: $('closeModalBtn')
+    };
+
+    function loadSettings() {
+      const saved = JSON.parse(localStorage.getItem('photoVaultSettings') || '{}');
+      const token = localStorage.getItem('photoVaultToken') || '';
+      els.token.value = token;
+      els.owner.value = saved.owner || DEFAULTS.owner;
+      els.repo.value = saved.repo || DEFAULTS.repo;
+      els.branch.value = saved.branch || DEFAULTS.branch;
+      els.folder.value = saved.folder || DEFAULTS.folder;
+    }
+
+    function settings() {
+      return {
+        token: els.token.value.trim(),
+        owner: els.owner.value.trim(),
+        repo: els.repo.value.trim(),
+        branch: els.branch.value.trim(),
+        folder: trimSlashes(els.folder.value.trim())
+      };
+    }
+
+    function saveSettings() {
+      const s = settings();
+      localStorage.setItem('photoVaultSettings', JSON.stringify({ owner: s.owner, repo: s.repo, branch: s.branch, folder: s.folder }));
+      if (s.token) localStorage.setItem('photoVaultToken', s.token);
+      else localStorage.removeItem('photoVaultToken');
+      toast('设置已保存到本机浏览器');
+    }
+
+    function trimSlashes(v) { return v.replace(/^\/+|\/+$/g, ''); }
+
+    function apiHeaders(token) {
+      const h = {
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      };
+      if (token) h.Authorization = `Bearer ${token}`;
+      return h;
+    }
+
+    function rawUrl(s, path) {
+      return `https://raw.githubusercontent.com/${encodeURIComponent(s.owner)}/${encodeURIComponent(s.repo)}/${encodeURIComponent(s.branch)}/${path.split('/').map(encodeURIComponent).join('/')}`;
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return '0 MB';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let size = bytes, i = 0;
+      while (size >= 1024 && i < units.length - 1) { size /= 1024; i++; }
+      return `${size.toFixed(i === 0 ? 0 : 2)} ${units[i]}`;
+    }
+
+    function safeName(name) {
+      const dot = name.lastIndexOf('.');
+      const ext = dot >= 0 ? name.slice(dot).toLowerCase().replace(/[^a-z0-9.]/g, '') : '.jpg';
+      const base = (dot >= 0 ? name.slice(0, dot) : name)
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af_-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 70) || 'photo';
+      const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);
+      const rand = Math.random().toString(36).slice(2, 8);
+      return `${stamp}-${rand}-${base}${ext}`;
+    }
+
+    function isImagePath(path) {
+      const lower = path.toLowerCase();
+      return IMAGE_EXTS.some(ext => lower.endsWith(ext));
+    }
+
+    async function requestJson(url, options = {}) {
+      const res = await fetch(url, options);
+      const text = await res.text();
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+      if (!res.ok) {
+        const msg = data && data.message ? data.message : `${res.status} ${res.statusText}`;
+        throw new Error(msg);
+      }
+      return data;
+    }
+
+    async function loadGallery() {
+      const s = settings();
+      if (!s.owner || !s.repo || !s.branch || !s.folder) return toast('请先补全仓库设置');
+      els.repoStatus.textContent = '连接中';
+      try {
+        const url = `https://api.github.com/repos/${s.owner}/${s.repo}/git/trees/${encodeURIComponent(s.branch)}?recursive=1`;
+        const data = await requestJson(url, { headers: apiHeaders(s.token) });
+        state.photos = (data.tree || [])
+          .filter(item => item.type === 'blob' && item.path.startsWith(`${s.folder}/`) && isImagePath(item.path))
+          .map(item => ({
+            name: item.path.split('/').pop(),
+            path: item.path,
+            sha: item.sha,
+            size: item.size || 0,
+            url: rawUrl(s, item.path)
+          }))
+          .sort((a, b) => b.name.localeCompare(a.name, 'zh-Hans-CN'));
+        els.repoStatus.textContent = '已连接';
+        applyFilter();
+      } catch (err) {
+        els.repoStatus.textContent = '连接失败';
+        toast(`读取失败：${err.message}`);
+        console.error(err);
+      }
+    }
+
+    function applyFilter() {
+      const q = els.search.value.trim().toLowerCase();
+      state.filtered = q ? state.photos.filter(p => p.name.toLowerCase().includes(q) || p.path.toLowerCase().includes(q)) : [...state.photos];
+      renderGallery();
+    }
+
+    function renderGallery() {
+      els.photoCount.textContent = state.photos.length;
+      els.totalSize.textContent = formatBytes(state.photos.reduce((sum, p) => sum + (p.size || 0), 0));
+      els.empty.style.display = state.filtered.length ? 'none' : 'block';
+      els.gallery.innerHTML = state.filtered.map((p, index) => `
+        <article class="photo-card" style="animation-delay:${Math.min(index * 18, 260)}ms">
+          <img class="thumb" loading="lazy" src="${p.url}" alt="${escapeHtml(p.name)}" data-path="${escapeHtml(p.path)}" />
+          <div class="meta">
+            <div class="name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div>
+            <div class="sub"><span>${formatBytes(p.size)}</span><span>${escapeHtml(p.path.split('/').slice(-2, -1)[0] || '')}</span></div>
+            <div class="actions">
+              <a class="button-like ghost" href="${p.url}" target="_blank" rel="noopener">原图</a>
+              <button class="ghost copy" type="button" data-url="${p.url}">复制</button>
+              <button class="danger delete" type="button" title="从仓库删除" data-path="${escapeHtml(p.path)}" data-sha="${p.sha}">🗑</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
+    }
+
+    function readAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(',')[1]);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadFiles(files) {
+      const s = settings();
+      if (!s.token) return toast('上传前请先填写 GitHub Token');
+      const picked = [...files].filter(file => file.type.startsWith('image/'));
+      if (!picked.length) return toast('没有可上传的图片文件');
+      saveSettings();
+      els.progressWrap.style.display = 'block';
+      els.log.textContent = '';
+      let done = 0;
+      for (const file of picked) {
+        const filename = safeName(file.name);
+        const path = `${s.folder}/${filename}`;
+        try {
+          appendLog(`开始上传：${file.name}`);
+          const content = await readAsBase64(file);
+          const body = {
+            message: `Upload photo: ${filename}`,
+            content,
+            branch: s.branch
+          };
+          const url = `https://api.github.com/repos/${s.owner}/${s.repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+          await requestJson(url, {
+            method: 'PUT',
+            headers: { ...apiHeaders(s.token), 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          appendLog(`完成：${filename}`);
+        } catch (err) {
+          appendLog(`失败：${file.name} -> ${err.message}`);
+        }
+        done++;
+        els.progressBar.style.width = `${Math.round(done / picked.length * 100)}%`;
+      }
+      toast('上传流程完成，正在刷新相册');
+      await loadGallery();
+    }
+
+    function appendLog(line) {
+      els.log.textContent += `${line}\n`;
+      els.log.scrollTop = els.log.scrollHeight;
+    }
+
+    async function deletePhoto(path, sha) {
+      const s = settings();
+      if (!s.token) return toast('删除前请先填写 GitHub Token');
+      if (!confirm(`确认从仓库删除这张照片？\n${path}`)) return;
+      try {
+        const url = `https://api.github.com/repos/${s.owner}/${s.repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+        await requestJson(url, {
+          method: 'DELETE',
+          headers: { ...apiHeaders(s.token), 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `Delete photo: ${path.split('/').pop()}`, sha, branch: s.branch })
+        });
+        toast('已从仓库删除');
+        await loadGallery();
+      } catch (err) {
+        toast(`删除失败：${err.message}`);
+      }
+    }
+
+    async function copyText(text) {
+      await navigator.clipboard.writeText(text);
+      toast('已复制原图链接');
+    }
+
+    function openModal(photo) {
+      els.modalImg.src = photo.url;
+      els.modalTitle.textContent = photo.name;
+      els.modal.classList.add('open');
+    }
+
+    function closeModal() {
+      els.modal.classList.remove('open');
+      els.modalImg.src = '';
+    }
+
+    function toast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add('show');
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => els.toast.classList.remove('show'), 3200);
+    }
+
+    els.save.addEventListener('click', saveSettings);
+    els.refresh.addEventListener('click', loadGallery);
+    els.choose.addEventListener('click', () => els.file.click());
+    els.file.addEventListener('change', (e) => uploadFiles(e.target.files));
+    els.search.addEventListener('input', applyFilter);
+    els.closeModal.addEventListener('click', closeModal);
+    els.modal.addEventListener('click', (e) => { if (e.target === els.modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    ['dragenter', 'dragover'].forEach(type => els.dropzone.addEventListener(type, (e) => {
+      e.preventDefault();
+      els.dropzone.classList.add('dragover');
+    }));
+    ['dragleave', 'drop'].forEach(type => els.dropzone.addEventListener(type, (e) => {
+      e.preventDefault();
+      els.dropzone.classList.remove('dragover');
+    }));
+    els.dropzone.addEventListener('drop', (e) => uploadFiles(e.dataTransfer.files));
+    els.dropzone.addEventListener('click', () => els.file.click());
+
+    els.gallery.addEventListener('click', (e) => {
+      const img = e.target.closest('.thumb');
+      if (img) {
+        const photo = state.photos.find(p => p.path === img.dataset.path);
+        if (photo) openModal(photo);
+        return;
+      }
+      const copy = e.target.closest('.copy');
+      if (copy) return copyText(copy.dataset.url);
+      const del = e.target.closest('.delete');
+      if (del) return deletePhoto(del.dataset.path, del.dataset.sha);
+    });
+
+    loadSettings();
+    loadGallery();
+  </script>
+</body>
+</html>
