@@ -19,11 +19,14 @@ npm-debug.log*
 __pycache__/
 *.pyc
 
-# Build artifacts (if any are added in the future)
+# Build artifacts
 /dist/
 /build/
+**/dist/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
 
 # Dependencies (if any are added in the future)
 node_modules/
-package-lock.json
 yarn.lock
