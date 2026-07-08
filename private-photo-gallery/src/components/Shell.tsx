@@ -1,12 +1,12 @@
-import { Archive, BookOpen, Images, Settings, Stamp, TicketPlus } from 'lucide-react';
+import { Aperture, CloudSun, Images, Library, Settings, UploadCloud } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { PropsWithChildren } from 'react';
 
 const navigation = [
-  { to: '/', label: '扉页', icon: BookOpen },
-  { to: '/library', label: '档案柜', icon: Archive },
-  { to: '/albums', label: '旅程章节', icon: Images },
-  { to: '/upload', label: '收入照片', icon: TicketPlus },
+  { to: '/', label: '首页', icon: CloudSun },
+  { to: '/library', label: '照片', icon: Library },
+  { to: '/albums', label: '旅程', icon: Images },
+  { to: '/upload', label: '上传', icon: UploadCloud },
   { to: '/settings', label: '设置', icon: Settings },
 ];
 
@@ -14,11 +14,11 @@ export function Shell({ children }: PropsWithChildren) {
   return (
     <div className="site-shell">
       <header className="masthead">
-        <NavLink to="/" className="brand" aria-label="返回封面">
-          <span className="brand-mark"><Stamp size={21} /></span>
+        <NavLink to="/" className="brand" aria-label="返回首页">
+          <span className="brand-mark"><Aperture size={20} /></span>
           <span>
-            <strong>NUMAZU PILGRIMAGE NOTES</strong>
-            <small>沼津巡礼记忆库 · PRIVATE COLLECTION</small>
+            <strong>SORA'S PHOTO SPACE</strong>
+            <small>takanashi.moe · private memories</small>
           </span>
         </NavLink>
         <nav className="desktop-nav" aria-label="主导航">
@@ -37,9 +37,9 @@ export function Shell({ children }: PropsWithChildren) {
         ))}
       </nav>
       <footer className="footer">
-        <span>沼津 · 内浦 · 旅程记录</span>
-        <span>车票、照片与心情，只收进自己的档案柜。</span>
-        <span>PRIVATE ARCHIVE · {new Date().getFullYear()}</span>
+        <span>SORA'S PRIVATE PHOTO SPACE</span>
+        <span>光、海风，以及想要记住的普通一天。</span>
+        <span>takanashi.moe · {new Date().getFullYear()}</span>
       </footer>
     </div>
   );
