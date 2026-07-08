@@ -6,101 +6,7 @@
   <meta name="referrer" content="no-referrer" />
   <title>Sora Private Photo Vault</title>
   <style>
-    :root {
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --soft: #94a3b8;
-      --line: rgba(255,255,255,.17);
-      --panel: rgba(255,255,255,.10);
-      --accent: #8b5cf6;
-      --accent2: #06b6d4;
-      --danger: #fb7185;
-      --shadow: 0 24px 80px rgba(0,0,0,.38);
-      --radius: 24px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background:
-        radial-gradient(circle at 12% 10%, rgba(139,92,246,.40), transparent 34%),
-        radial-gradient(circle at 84% 18%, rgba(6,182,212,.34), transparent 32%),
-        radial-gradient(circle at 50% 96%, rgba(244,114,182,.22), transparent 36%),
-        linear-gradient(135deg, #020617, #0f172a 48%, #111827);
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), transparent 82%);
-    }
-    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 38px 0 64px; position: relative; z-index: 1; }
-    .glass { background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.07)); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
-    .hero { display: grid; grid-template-columns: 1.3fr .7fr; gap: 22px; align-items: stretch; margin-bottom: 22px; }
-    .title-card { padding: 34px; overflow: hidden; position: relative; }
-    .title-card::after { content: ""; position: absolute; width: 240px; height: 240px; right: -72px; top: -86px; background: radial-gradient(circle, rgba(255,255,255,.22), transparent 62%); border-radius: 999px; }
-    .eyebrow { display: inline-flex; gap: 8px; align-items: center; padding: 8px 12px; border: 1px solid rgba(255,255,255,.20); border-radius: 999px; color: var(--muted); background: rgba(15,23,42,.34); font-size: 13px; }
-    h1 { margin: 18px 0 10px; font-size: clamp(36px, 6vw, 72px); letter-spacing: -.06em; line-height: .95; }
-    .gradient-text { background: linear-gradient(90deg, #fff, #c4b5fd 42%, #67e8f9); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .lead { max-width: 700px; color: var(--muted); font-size: 17px; line-height: 1.72; margin: 0; }
-    .stat-card { padding: 24px; display: grid; gap: 14px; align-content: center; }
-    .stat { padding: 16px; border-radius: 20px; background: rgba(15,23,42,.42); border: 1px solid rgba(255,255,255,.12); }
-    .stat b { display: block; font-size: 26px; letter-spacing: -.03em; }
-    .stat span { color: var(--soft); font-size: 13px; }
-    .toolbar { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; padding: 16px; margin-bottom: 22px; align-items: center; }
-    .search, .field input { width: 100%; padding: 14px 16px; color: var(--text); background: rgba(15,23,42,.58); border: 1px solid rgba(255,255,255,.14); border-radius: 16px; outline: none; font-size: 15px; }
-    .search:focus, .field input:focus { border-color: rgba(139,92,246,.72); box-shadow: 0 0 0 4px rgba(139,92,246,.18); }
-    button, .button-like { appearance: none; border: 0; border-radius: 16px; color: white; cursor: pointer; padding: 13px 16px; font-weight: 750; background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 16px 34px rgba(6,182,212,.18); transition: transform .18s ease, filter .18s ease; white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
-    button:hover, .button-like:hover { transform: translateY(-2px); filter: brightness(1.06); }
-    button:disabled { cursor: not-allowed; opacity: .55; transform: none; }
-    .ghost { background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.14); box-shadow: none; }
-    .danger { background: linear-gradient(135deg, #f43f5e, #fb7185); }
-    .layout { display: grid; grid-template-columns: 340px 1fr; gap: 22px; align-items: start; }
-    .side { padding: 20px; position: sticky; top: 18px; }
-    .side h2, .main h2 { margin: 0 0 14px; font-size: 20px; letter-spacing: -.02em; }
-    .field { margin-bottom: 14px; }
-    .field label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 13px; margin-bottom: 7px; }
-    .field input { padding: 12px 13px; border-radius: 14px; }
-    .hint { color: var(--soft); font-size: 12px; line-height: 1.6; margin: 10px 0 0; }
-    .notice { margin-top: 14px; padding: 13px 14px; border-radius: 16px; border: 1px solid rgba(34,197,94,.34); background: rgba(34,197,94,.10); color: #bbf7d0; font-size: 12px; line-height: 1.7; }
-    .dropzone { border: 1.5px dashed rgba(255,255,255,.30); background: rgba(15,23,42,.36); border-radius: 22px; padding: 22px; text-align: center; transition: border .18s ease, background .18s ease, transform .18s ease; margin: 16px 0; }
-    .dropzone.dragover { border-color: #67e8f9; background: rgba(6,182,212,.14); transform: scale(1.01); }
-    .dropzone .icon { font-size: 38px; display: block; margin-bottom: 8px; }
-    .dropzone p { margin: 0; color: var(--muted); line-height: 1.65; }
-    .dropzone small { color: var(--soft); }
-    #fileInput { display: none; }
-    .progress-wrap { margin-top: 14px; display: none; }
-    .progress-bar { height: 10px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.10); }
-    .progress-bar i { display: block; height: 100%; width: 0%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .18s ease; }
-    .log { margin-top: 10px; max-height: 132px; overflow: auto; color: var(--soft); font-size: 12px; line-height: 1.55; white-space: pre-wrap; }
-    .main { min-height: 480px; padding: 20px; }
-    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
-    .photo-card { border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,.14); background: rgba(15,23,42,.44); box-shadow: 0 18px 40px rgba(0,0,0,.24); min-height: 240px; display: grid; grid-template-rows: 170px auto; animation: rise .28s ease both; }
-    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .thumb-wrap { height: 170px; background: rgba(255,255,255,.08); display: grid; place-items: center; overflow: hidden; cursor: zoom-in; }
-    .thumb { width: 100%; height: 170px; object-fit: cover; display: block; }
-    .loading { color: var(--soft); font-size: 12px; padding: 16px; text-align: center; }
-    .meta { padding: 12px; display: grid; gap: 9px; }
-    .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 750; font-size: 13px; }
-    .sub { display: flex; justify-content: space-between; gap: 8px; color: var(--soft); font-size: 12px; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr 38px; gap: 8px; }
-    .actions button, .actions a { padding: 9px 10px; border-radius: 12px; font-size: 12px; }
-    .empty { border: 1px dashed rgba(255,255,255,.22); background: rgba(15,23,42,.28); border-radius: 22px; padding: 44px 24px; text-align: center; color: var(--muted); }
-    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; background: rgba(15,23,42,.94); border: 1px solid rgba(255,255,255,.16); color: white; padding: 12px 16px; border-radius: 999px; box-shadow: var(--shadow); z-index: 20; transition: opacity .2s ease, transform .2s ease; max-width: min(720px, calc(100% - 32px)); text-align: center; }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .modal { position: fixed; inset: 0; z-index: 30; background: rgba(2,6,23,.88); display: none; align-items: center; justify-content: center; padding: 24px; }
-    .modal.open { display: flex; }
-    .modal-inner { width: min(1080px, 100%); max-height: 92vh; display: grid; gap: 12px; }
-    .modal img { max-width: 100%; max-height: 78vh; object-fit: contain; border-radius: 22px; margin: 0 auto; display: block; box-shadow: var(--shadow); background: rgba(255,255,255,.06); }
-    .modal-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; color: var(--muted); }
-    .modal-title { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-    @media (max-width: 880px) { .hero, .layout { grid-template-columns: 1fr; } .side { position: static; } .toolbar { grid-template-columns: 1fr; } h1 { font-size: 44px; } }
+    :root{--text:#f8fafc;--muted:#cbd5e1;--soft:#94a3b8;--line:rgba(255,255,255,.17);--accent:#8b5cf6;--accent2:#06b6d4;--danger:#fb7185;--shadow:0 24px 80px rgba(0,0,0,.38);--radius:24px}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 12% 10%,rgba(139,92,246,.40),transparent 34%),radial-gradient(circle at 84% 18%,rgba(6,182,212,.34),transparent 32%),radial-gradient(circle at 50% 96%,rgba(244,114,182,.22),transparent 36%),linear-gradient(135deg,#020617,#0f172a 48%,#111827);overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 82%)}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:38px 0 64px;position:relative;z-index:1}.glass{background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.07));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:22px;margin-bottom:22px}.title-card{padding:34px;overflow:hidden;position:relative}.title-card:after{content:"";position:absolute;width:240px;height:240px;right:-72px;top:-86px;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 62%);border-radius:999px}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid rgba(255,255,255,.20);border-radius:999px;color:var(--muted);background:rgba(15,23,42,.34);font-size:13px}h1{margin:18px 0 10px;font-size:clamp(36px,6vw,72px);letter-spacing:-.06em;line-height:.95}.gradient-text{background:linear-gradient(90deg,#fff,#c4b5fd 42%,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}.lead{max-width:720px;color:var(--muted);font-size:17px;line-height:1.72;margin:0}.stat-card{padding:24px;display:grid;gap:14px;align-content:center}.stat{padding:16px;border-radius:20px;background:rgba(15,23,42,.42);border:1px solid rgba(255,255,255,.12)}.stat b{display:block;font-size:26px;letter-spacing:-.03em}.stat span{color:var(--soft);font-size:13px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:12px;padding:16px;margin-bottom:22px;align-items:center}.search,.field input{width:100%;padding:14px 16px;color:var(--text);background:rgba(15,23,42,.58);border:1px solid rgba(255,255,255,.14);border-radius:16px;outline:none;font-size:15px}.search:focus,.field input:focus{border-color:rgba(139,92,246,.72);box-shadow:0 0 0 4px rgba(139,92,246,.18)}button,.button-like{appearance:none;border:0;border-radius:16px;color:white;cursor:pointer;padding:13px 16px;font-weight:750;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 16px 34px rgba(6,182,212,.18);transition:transform .18s ease,filter .18s ease;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:14px}button:hover,.button-like:hover{transform:translateY(-2px);filter:brightness(1.06)}button:disabled{cursor:not-allowed;opacity:.55;transform:none}.ghost{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);box-shadow:none}.danger{background:linear-gradient(135deg,#f43f5e,#fb7185)}.layout{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start}.side{padding:20px;position:sticky;top:18px}.side h2,.main h2{margin:0 0 14px;font-size:20px;letter-spacing:-.02em}.field{margin-bottom:14px}.field label{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:13px;margin-bottom:7px}.field input{padding:12px 13px;border-radius:14px}.hint{color:var(--soft);font-size:12px;line-height:1.6;margin:10px 0 0}.notice{margin-top:14px;padding:13px 14px;border-radius:16px;border:1px solid rgba(34,197,94,.34);background:rgba(34,197,94,.10);color:#bbf7d0;font-size:12px;line-height:1.7}.dropzone{border:1.5px dashed rgba(255,255,255,.30);background:rgba(15,23,42,.36);border-radius:22px;padding:22px;text-align:center;transition:border .18s ease,background .18s ease,transform .18s ease;margin:16px 0}.dropzone.dragover{border-color:#67e8f9;background:rgba(6,182,212,.14);transform:scale(1.01)}.dropzone .icon{font-size:38px;display:block;margin-bottom:8px}.dropzone p{margin:0;color:var(--muted);line-height:1.65}.dropzone small{color:var(--soft)}#fileInput{display:none}.progress-wrap{margin-top:14px;display:none}.progress-bar{height:10px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.10)}.progress-bar i{display:block;height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .18s ease}.log{margin-top:10px;max-height:132px;overflow:auto;color:var(--soft);font-size:12px;line-height:1.55;white-space:pre-wrap}.main{min-height:480px;padding:20px}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}.photo-card{border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:rgba(15,23,42,.44);box-shadow:0 18px 40px rgba(0,0,0,.24);min-height:240px;display:grid;grid-template-rows:170px auto;animation:rise .28s ease both}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.thumb-wrap{height:170px;background:rgba(255,255,255,.08);display:grid;place-items:center;overflow:hidden;cursor:zoom-in;position:relative}.thumb{width:100%;height:170px;object-fit:cover;display:none}.thumb.ready{display:block}.loading{color:var(--soft);font-size:12px;padding:16px;text-align:center}.thumb.ready+.loading{display:none}.meta{padding:12px;display:grid;gap:9px}.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:750;font-size:13px}.sub{display:flex;justify-content:space-between;gap:8px;color:var(--soft);font-size:12px}.actions{display:grid;grid-template-columns:1fr 1fr 38px;gap:8px}.actions button{padding:9px 10px;border-radius:12px;font-size:12px}.empty{border:1px dashed rgba(255,255,255,.22);background:rgba(15,23,42,.28);border-radius:22px;padding:44px 24px;text-align:center;color:var(--muted);line-height:1.7}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:rgba(15,23,42,.94);border:1px solid rgba(255,255,255,.16);color:white;padding:12px 16px;border-radius:999px;box-shadow:var(--shadow);z-index:20;transition:opacity .2s ease,transform .2s ease;max-width:min(720px,calc(100% - 32px));text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.modal{position:fixed;inset:0;z-index:30;background:rgba(2,6,23,.88);display:none;align-items:center;justify-content:center;padding:24px}.modal.open{display:flex}.modal-inner{width:min(1080px,100%);max-height:92vh;display:grid;gap:12px}.modal img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:22px;margin:0 auto;display:block;box-shadow:var(--shadow);background:rgba(255,255,255,.06)}.modal-top{display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--muted)}.modal-title{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}@media(max-width:880px){.hero,.layout{grid-template-columns:1fr}.side{position:static}.toolbar{grid-template-columns:1fr}h1{font-size:44px}}
   </style>
 </head>
 <body>
@@ -127,308 +33,62 @@
     <section class="layout">
       <aside class="side glass">
         <h2>私有仓库设置</h2>
-        <div class="field">
-          <label for="tokenInput">GitHub Token <span>仅保存在本机浏览器</span></label>
-          <input id="tokenInput" type="password" autocomplete="off" placeholder="github_pat_..." />
-        </div>
-        <div class="field">
-          <label for="ownerInput">Owner</label>
-          <input id="ownerInput" value="takanashi-sora" />
-        </div>
-        <div class="field">
-          <label for="repoInput">Private Repository</label>
-          <input id="repoInput" value="photo-vault" />
-        </div>
-        <div class="field">
-          <label for="branchInput">Branch</label>
-          <input id="branchInput" value="main" />
-        </div>
-        <div class="field">
-          <label for="folderInput">私有图片目录</label>
-          <input id="folderInput" value="photos" />
-        </div>
+        <div class="field"><label for="tokenInput">GitHub Token <span>仅保存在本机浏览器</span></label><input id="tokenInput" type="password" autocomplete="off" placeholder="github_pat_..." /></div>
+        <div class="field"><label for="ownerInput">Owner</label><input id="ownerInput" value="takanashi-sora" /></div>
+        <div class="field"><label for="repoInput">Private Repository</label><input id="repoInput" value="photo-vault" /></div>
+        <div class="field"><label for="branchInput">Branch</label><input id="branchInput" value="main" /></div>
+        <div class="field"><label for="folderInput">私有图片目录</label><input id="folderInput" value="photos" /></div>
         <button id="saveSettingsBtn" type="button" style="width:100%">💾 保存本机设置</button>
-
-        <div id="dropzone" class="dropzone">
-          <span class="icon">🌌</span>
-          <p>把照片拖到这里上传到私有仓库<br><small>支持 jpg / png / gif / webp / avif，多选上传</small></p>
-        </div>
+        <div id="dropzone" class="dropzone"><span class="icon">🌌</span><p>把照片拖到这里上传到私有仓库<br><small>支持 jpg / png / gif / webp / avif，多选上传</small></p></div>
         <input id="fileInput" type="file" accept="image/*" multiple />
-
-        <div class="progress-wrap" id="progressWrap">
-          <div class="progress-bar"><i id="progressBar"></i></div>
-          <div class="log" id="uploadLog"></div>
-        </div>
-
+        <div class="progress-wrap" id="progressWrap"><div class="progress-bar"><i id="progressBar"></i></div><div class="log" id="uploadLog"></div></div>
         <p class="hint">建议使用 fine-grained personal access token，只授权私有仓库 <b>photo-vault</b> 的 Contents: Read and write。Token 不会写入仓库，但请不要在公共电脑上使用。</p>
         <div class="notice">此页面不会生成公开图片直链。预览图来自 GitHub API 授权读取后的浏览器本地临时 URL，刷新页面后会重新加载。</div>
       </aside>
-
       <section class="main glass">
         <h2>私有照片墙</h2>
         <div id="gallery" class="gallery"></div>
-        <div id="empty" class="empty" style="display:none;">还没有加载到照片。请先创建私有仓库 <code>photo-vault</code>，放置 <code>photos/.gitkeep</code>，再填写 Token 后刷新。</div>
+        <div id="empty" class="empty" style="display:none;">还没有加载到照片。请先创建私有仓库 <code>photo-vault</code>，初始化 main 分支，然后填写 Token 后刷新。首次上传时，程序会自动创建 <code>photos/</code> 路径。</div>
       </section>
     </section>
   </main>
-
   <div id="toast" class="toast"></div>
-  <div id="modal" class="modal" role="dialog" aria-modal="true">
-    <div class="modal-inner">
-      <div class="modal-top">
-        <div id="modalTitle" class="modal-title"></div>
-        <button id="closeModalBtn" class="ghost" type="button">关闭 ✕</button>
-      </div>
-      <img id="modalImg" alt="preview" />
-    </div>
-  </div>
+  <div id="modal" class="modal" role="dialog" aria-modal="true"><div class="modal-inner"><div class="modal-top"><div id="modalTitle" class="modal-title"></div><button id="closeModalBtn" class="ghost" type="button">关闭 ✕</button></div><img id="modalImg" alt="preview" /></div></div>
 
   <script>
-    const DEFAULTS = { owner: 'takanashi-sora', repo: 'photo-vault', branch: 'main', folder: 'photos' };
-    const IMAGE_EXTS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.bmp', '.svg'];
-    const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', avif: 'image/avif', bmp: 'image/bmp', svg: 'image/svg+xml' };
-    const state = { photos: [], filtered: [], objectUrls: new Map() };
-    const $ = id => document.getElementById(id);
-    const els = {
-      token: $('tokenInput'), owner: $('ownerInput'), repo: $('repoInput'), branch: $('branchInput'), folder: $('folderInput'),
-      gallery: $('gallery'), empty: $('empty'), photoCount: $('photoCount'), totalSize: $('totalSize'), repoStatus: $('repoStatus'),
-      search: $('searchInput'), refresh: $('refreshBtn'), choose: $('chooseBtn'), file: $('fileInput'), dropzone: $('dropzone'),
-      save: $('saveSettingsBtn'), progressWrap: $('progressWrap'), progressBar: $('progressBar'), log: $('uploadLog'),
-      toast: $('toast'), modal: $('modal'), modalImg: $('modalImg'), modalTitle: $('modalTitle'), closeModal: $('closeModalBtn')
-    };
-
-    function loadSettings() {
-      const saved = JSON.parse(localStorage.getItem('privatePhotoVaultSettings') || '{}');
-      els.token.value = localStorage.getItem('privatePhotoVaultToken') || '';
-      els.owner.value = saved.owner || DEFAULTS.owner;
-      els.repo.value = saved.repo || DEFAULTS.repo;
-      els.branch.value = saved.branch || DEFAULTS.branch;
-      els.folder.value = saved.folder || DEFAULTS.folder;
-    }
-    function settings() {
-      return { token: els.token.value.trim(), owner: els.owner.value.trim(), repo: els.repo.value.trim(), branch: els.branch.value.trim(), folder: trimSlashes(els.folder.value.trim()) };
-    }
-    function saveSettings() {
-      const s = settings();
-      localStorage.setItem('privatePhotoVaultSettings', JSON.stringify({ owner: s.owner, repo: s.repo, branch: s.branch, folder: s.folder }));
-      if (s.token) localStorage.setItem('privatePhotoVaultToken', s.token); else localStorage.removeItem('privatePhotoVaultToken');
-      toast('私有仓库设置已保存到本机浏览器');
-    }
-    function trimSlashes(v) { return v.replace(/^\/+|\/+$/g, ''); }
-    function apiHeaders(token) {
-      const h = { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
-      if (token) h.Authorization = `Bearer ${token}`;
-      return h;
-    }
-    function formatBytes(bytes) {
-      if (!bytes) return '0 MB';
-      const units = ['B','KB','MB','GB'];
-      let size = bytes, i = 0;
-      while (size >= 1024 && i < units.length - 1) { size /= 1024; i++; }
-      return `${size.toFixed(i === 0 ? 0 : 2)} ${units[i]}`;
-    }
-    function safeName(name) {
-      const dot = name.lastIndexOf('.');
-      const ext = dot >= 0 ? name.slice(dot).toLowerCase().replace(/[^a-z0-9.]/g, '') : '.jpg';
-      const base = (dot >= 0 ? name.slice(0, dot) : name)
-        .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-zA-Z0-9\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af_-]+/g, '-')
-        .replace(/^-+|-+$/g, '').slice(0, 70) || 'photo';
-      const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);
-      const rand = Math.random().toString(36).slice(2, 8);
-      return `${stamp}-${rand}-${base}${ext}`;
-    }
-    function isImagePath(path) { const lower = path.toLowerCase(); return IMAGE_EXTS.some(ext => lower.endsWith(ext)); }
-    function mimeFromName(name) { const ext = name.split('.').pop().toLowerCase(); return MIME[ext] || 'application/octet-stream'; }
-    function escapeHtml(str) { return String(str).replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch])); }
-
-    async function requestJson(url, options = {}) {
-      const res = await fetch(url, options);
-      const text = await res.text();
-      let data = null;
-      try { data = text ? JSON.parse(text) : null; } catch { data = text; }
-      if (!res.ok) throw new Error(data && data.message ? data.message : `${res.status} ${res.statusText}`);
-      return data;
-    }
-    function revokeObjectUrls() {
-      for (const url of state.objectUrls.values()) URL.revokeObjectURL(url);
-      state.objectUrls.clear();
-    }
-    function base64ToBlobUrl(base64, mime) {
-      const clean = base64.replace(/\n/g, '');
-      const raw = atob(clean);
-      const bytes = new Uint8Array(raw.length);
-      for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-      return URL.createObjectURL(new Blob([bytes], { type: mime }));
-    }
-    async function loadBlobUrl(photo) {
-      if (state.objectUrls.has(photo.path)) return state.objectUrls.get(photo.path);
-      const s = settings();
-      const url = `https://api.github.com/repos/${s.owner}/${s.repo}/git/blobs/${photo.sha}`;
-      const data = await requestJson(url, { headers: apiHeaders(s.token) });
-      const objectUrl = base64ToBlobUrl(data.content, mimeFromName(photo.name));
-      state.objectUrls.set(photo.path, objectUrl);
-      return objectUrl;
-    }
-    async function hydrateImages() {
-      const batch = [...state.filtered];
-      for (const photo of batch) {
-        try {
-          const objectUrl = await loadBlobUrl(photo);
-          const img = document.querySelector(`img[data-path="${CSS.escape(photo.path)}"]`);
-          if (img) img.src = objectUrl;
-          photo.objectUrl = objectUrl;
-        } catch (err) {
-          const box = document.querySelector(`[data-placeholder="${CSS.escape(photo.path)}"]`);
-          if (box) box.textContent = `读取失败：${err.message}`;
-        }
-      }
-    }
-    async function loadGallery() {
-      const s = settings();
-      if (!s.token) return toast('读取私有仓库前请先填写 GitHub Token');
-      if (!s.owner || !s.repo || !s.branch || !s.folder) return toast('请先补全私有仓库设置');
-      saveSettings();
-      revokeObjectUrls();
-      els.repoStatus.textContent = '连接中';
-      els.refresh.disabled = true;
-      try {
-        const url = `https://api.github.com/repos/${s.owner}/${s.repo}/git/trees/${encodeURIComponent(s.branch)}?recursive=1`;
-        const data = await requestJson(url, { headers: apiHeaders(s.token) });
-        state.photos = (data.tree || [])
-          .filter(item => item.type === 'blob' && item.path.startsWith(`${s.folder}/`) && isImagePath(item.path))
-          .map(item => ({ name: item.path.split('/').pop(), path: item.path, sha: item.sha, size: item.size || 0 }))
-          .sort((a, b) => b.name.localeCompare(a.name, 'zh-Hans-CN'));
-        els.repoStatus.textContent = '已连接';
-        applyFilter();
-        hydrateImages();
-      } catch (err) {
-        els.repoStatus.textContent = '连接失败';
-        state.photos = [];
-        applyFilter();
-        toast(`读取失败：${err.message}`);
-      } finally {
-        els.refresh.disabled = false;
-      }
-    }
-    function applyFilter() {
-      const q = els.search.value.trim().toLowerCase();
-      state.filtered = q ? state.photos.filter(p => p.name.toLowerCase().includes(q) || p.path.toLowerCase().includes(q)) : [...state.photos];
-      renderGallery();
-      hydrateImages();
-    }
-    function renderGallery() {
-      els.photoCount.textContent = state.photos.length;
-      els.totalSize.textContent = formatBytes(state.photos.reduce((sum, p) => sum + (p.size || 0), 0));
-      els.empty.style.display = state.filtered.length ? 'none' : 'block';
-      els.gallery.innerHTML = state.filtered.map((p, index) => `
-        <article class="photo-card" style="animation-delay:${Math.min(index * 18, 260)}ms">
-          <div class="thumb-wrap" data-open="${escapeHtml(p.path)}">
-            <img class="thumb" loading="lazy" alt="${escapeHtml(p.name)}" data-path="${escapeHtml(p.path)}" src="" />
-            <span class="loading" data-placeholder="${escapeHtml(p.path)}">授权读取中...</span>
-          </div>
-          <div class="meta">
-            <div class="name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div>
-            <div class="sub"><span>${formatBytes(p.size)}</span><span>private</span></div>
-            <div class="actions">
-              <button class="ghost open" type="button" data-path="${escapeHtml(p.path)}">预览</button>
-              <button class="ghost copy" type="button" data-path="${escapeHtml(p.path)}">复制路径</button>
-              <button class="danger delete" type="button" title="从私有仓库删除" data-path="${escapeHtml(p.path)}" data-sha="${p.sha}">🗑</button>
-            </div>
-          </div>
-        </article>`).join('');
-    }
-    function readAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result).split(',')[1]);
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(file);
-      });
-    }
-    async function uploadFiles(files) {
-      const s = settings();
-      if (!s.token) return toast('上传前请先填写 GitHub Token');
-      const picked = [...files].filter(file => file.type.startsWith('image/'));
-      if (!picked.length) return toast('没有可上传的图片文件');
-      saveSettings();
-      els.progressWrap.style.display = 'block';
-      els.progressBar.style.width = '0%';
-      els.log.textContent = '';
-      let done = 0;
-      for (const file of picked) {
-        const filename = safeName(file.name);
-        const path = `${s.folder}/${filename}`;
-        try {
-          appendLog(`开始上传：${file.name}`);
-          const content = await readAsBase64(file);
-          const body = { message: `Upload private photo: ${filename}`, content, branch: s.branch };
-          const url = `https://api.github.com/repos/${s.owner}/${s.repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
-          await requestJson(url, { method: 'PUT', headers: { ...apiHeaders(s.token), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-          appendLog(`完成：${filename}`);
-        } catch (err) {
-          appendLog(`失败：${file.name} -> ${err.message}`);
-        }
-        done++;
-        els.progressBar.style.width = `${Math.round(done / picked.length * 100)}%`;
-      }
-      toast('上传流程完成，正在刷新私有相册');
-      await loadGallery();
-    }
-    function appendLog(line) { els.log.textContent += `${line}\n`; els.log.scrollTop = els.log.scrollHeight; }
-    async function deletePhoto(path, sha) {
-      const s = settings();
-      if (!s.token) return toast('删除前请先填写 GitHub Token');
-      if (!confirm(`确认从私有仓库删除这张照片？\n${path}`)) return;
-      try {
-        const url = `https://api.github.com/repos/${s.owner}/${s.repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
-        await requestJson(url, { method: 'DELETE', headers: { ...apiHeaders(s.token), 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `Delete private photo: ${path.split('/').pop()}`, sha, branch: s.branch }) });
-        toast('已从私有仓库删除');
-        await loadGallery();
-      } catch (err) { toast(`删除失败：${err.message}`); }
-    }
-    async function copyText(text) { await navigator.clipboard.writeText(text); toast('已复制私有仓库路径'); }
-    async function openModalByPath(path) {
-      const photo = state.photos.find(p => p.path === path);
-      if (!photo) return;
-      try {
-        const url = await loadBlobUrl(photo);
-        els.modalImg.src = url;
-        els.modalTitle.textContent = photo.name;
-        els.modal.classList.add('open');
-      } catch (err) { toast(`预览失败：${err.message}`); }
-    }
-    function closeModal() { els.modal.classList.remove('open'); els.modalImg.src = ''; }
-    function toast(message) {
-      els.toast.textContent = message;
-      els.toast.classList.add('show');
-      clearTimeout(toast.timer);
-      toast.timer = setTimeout(() => els.toast.classList.remove('show'), 3200);
-    }
-
-    els.save.addEventListener('click', saveSettings);
-    els.refresh.addEventListener('click', loadGallery);
-    els.choose.addEventListener('click', () => els.file.click());
-    els.file.addEventListener('change', e => uploadFiles(e.target.files));
-    els.search.addEventListener('input', applyFilter);
-    els.closeModal.addEventListener('click', closeModal);
-    els.modal.addEventListener('click', e => { if (e.target === els.modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-    ['dragenter','dragover'].forEach(type => els.dropzone.addEventListener(type, e => { e.preventDefault(); els.dropzone.classList.add('dragover'); }));
-    ['dragleave','drop'].forEach(type => els.dropzone.addEventListener(type, e => { e.preventDefault(); els.dropzone.classList.remove('dragover'); }));
-    els.dropzone.addEventListener('drop', e => uploadFiles(e.dataTransfer.files));
-    els.dropzone.addEventListener('click', () => els.file.click());
-    els.gallery.addEventListener('click', e => {
-      const open = e.target.closest('.open, .thumb-wrap');
-      if (open) return openModalByPath(open.dataset.path || open.dataset.open);
-      const copy = e.target.closest('.copy');
-      if (copy) return copyText(`${settings().owner}/${settings().repo}:${copy.dataset.path}`);
-      const del = e.target.closest('.delete');
-      if (del) return deletePhoto(del.dataset.path, del.dataset.sha);
-    });
-    window.addEventListener('beforeunload', revokeObjectUrls);
-    loadSettings();
-    if (els.token.value) loadGallery(); else applyFilter();
+    const DEFAULTS={owner:'takanashi-sora',repo:'photo-vault',branch:'main',folder:'photos'};
+    const IMAGE_EXTS=['.jpg','.jpeg','.png','.gif','.webp','.avif','.bmp','.svg'];
+    const MIME={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',avif:'image/avif',bmp:'image/bmp',svg:'image/svg+xml'};
+    const state={photos:[],filtered:[],objectUrls:new Map(),loading:false};
+    const $=id=>document.getElementById(id);
+    const els={token:$('tokenInput'),owner:$('ownerInput'),repo:$('repoInput'),branch:$('branchInput'),folder:$('folderInput'),gallery:$('gallery'),empty:$('empty'),photoCount:$('photoCount'),totalSize:$('totalSize'),repoStatus:$('repoStatus'),search:$('searchInput'),refresh:$('refreshBtn'),choose:$('chooseBtn'),file:$('fileInput'),dropzone:$('dropzone'),save:$('saveSettingsBtn'),progressWrap:$('progressWrap'),progressBar:$('progressBar'),log:$('uploadLog'),toast:$('toast'),modal:$('modal'),modalImg:$('modalImg'),modalTitle:$('modalTitle'),closeModal:$('closeModalBtn')};
+    const trimSlashes=v=>v.replace(/^\/+|\/+$/g,'');
+    const settings=()=>({token:els.token.value.trim(),owner:els.owner.value.trim(),repo:els.repo.value.trim(),branch:els.branch.value.trim(),folder:trimSlashes(els.folder.value.trim())});
+    function loadSettings(){const saved=JSON.parse(localStorage.getItem('privatePhotoVaultSettings')||'{}');els.token.value=localStorage.getItem('privatePhotoVaultToken')||'';els.owner.value=saved.owner||DEFAULTS.owner;els.repo.value=saved.repo||DEFAULTS.repo;els.branch.value=saved.branch||DEFAULTS.branch;els.folder.value=saved.folder||DEFAULTS.folder}
+    function saveSettings(){const s=settings();localStorage.setItem('privatePhotoVaultSettings',JSON.stringify({owner:s.owner,repo:s.repo,branch:s.branch,folder:s.folder}));s.token?localStorage.setItem('privatePhotoVaultToken',s.token):localStorage.removeItem('privatePhotoVaultToken');toast('私有仓库设置已保存到本机浏览器')}
+    function headers(token){const h={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};if(token)h.Authorization=`Bearer ${token}`;return h}
+    function formatBytes(bytes){if(!bytes)return'0 MB';const units=['B','KB','MB','GB'];let size=bytes,i=0;while(size>=1024&&i<units.length-1){size/=1024;i++}return`${size.toFixed(i===0?0:2)} ${units[i]}`}
+    function safeName(name){const dot=name.lastIndexOf('.');const ext=dot>=0?name.slice(dot).toLowerCase().replace(/[^a-z0-9.]/g,''):'.jpg';const base=(dot>=0?name.slice(0,dot):name).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af_-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,70)||'photo';const stamp=new Date().toISOString().replace(/[-:TZ.]/g,'').slice(0,14);const rand=Math.random().toString(36).slice(2,8);return`${stamp}-${rand}-${base}${ext}`}
+    const isImagePath=path=>IMAGE_EXTS.some(ext=>path.toLowerCase().endsWith(ext));
+    const mimeFromName=name=>MIME[name.split('.').pop().toLowerCase()]||'application/octet-stream';
+    const escapeHtml=str=>String(str).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    async function requestJson(url,options={}){const res=await fetch(url,options);const text=await res.text();let data=null;try{data=text?JSON.parse(text):null}catch{data=text}if(!res.ok)throw new Error(data&&data.message?data.message:`${res.status} ${res.statusText}`);return data}
+    function revokeObjectUrls(){for(const url of state.objectUrls.values())URL.revokeObjectURL(url);state.objectUrls.clear()}
+    function base64ToBlobUrl(base64,mime){const clean=base64.replace(/\n/g,'');const raw=atob(clean);const bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return URL.createObjectURL(new Blob([bytes],{type:mime}))}
+    async function loadBlobUrl(photo){if(state.objectUrls.has(photo.path))return state.objectUrls.get(photo.path);const s=settings();const url=`https://api.github.com/repos/${s.owner}/${s.repo}/git/blobs/${photo.sha}`;const data=await requestJson(url,{headers:headers(s.token)});const objectUrl=base64ToBlobUrl(data.content,mimeFromName(photo.name));state.objectUrls.set(photo.path,objectUrl);return objectUrl}
+    async function hydrateImages(){const batch=[...state.filtered];for(const photo of batch){try{const objectUrl=await loadBlobUrl(photo);const img=document.querySelector(`img[data-i="${photo.i}"]`);if(img){img.src=objectUrl;img.classList.add('ready')}photo.objectUrl=objectUrl}catch(err){const box=document.querySelector(`[data-placeholder="${photo.i}"]`);if(box)box.textContent=`读取失败：${err.message}`}}}
+    async function loadGallery(){const s=settings();if(!s.token)return toast('读取私有仓库前请先填写 GitHub Token');if(!s.owner||!s.repo||!s.branch||!s.folder)return toast('请先补全私有仓库设置');saveSettings();revokeObjectUrls();els.repoStatus.textContent='连接中';els.refresh.disabled=true;try{const url=`https://api.github.com/repos/${s.owner}/${s.repo}/git/trees/${encodeURIComponent(s.branch)}?recursive=1`;const data=await requestJson(url,{headers:headers(s.token)});state.photos=(data.tree||[]).filter(item=>item.type==='blob'&&item.path.startsWith(`${s.folder}/`)&&isImagePath(item.path)).map((item,i)=>({i,name:item.path.split('/').pop(),path:item.path,sha:item.sha,size:item.size||0})).sort((a,b)=>b.name.localeCompare(a.name,'zh-Hans-CN'));state.photos.forEach((p,i)=>p.i=i);els.repoStatus.textContent='已连接';applyFilter();hydrateImages()}catch(err){els.repoStatus.textContent='连接失败';state.photos=[];applyFilter();toast(`读取失败：${err.message}`)}finally{els.refresh.disabled=false}}
+    function applyFilter(){const q=els.search.value.trim().toLowerCase();state.filtered=q?state.photos.filter(p=>p.name.toLowerCase().includes(q)||p.path.toLowerCase().includes(q)):[...state.photos];renderGallery();if(state.filtered.length)hydrateImages()}
+    function renderGallery(){els.photoCount.textContent=state.photos.length;els.totalSize.textContent=formatBytes(state.photos.reduce((sum,p)=>sum+(p.size||0),0));els.empty.style.display=state.filtered.length?'none':'block';els.gallery.innerHTML=state.filtered.map((p,index)=>`<article class="photo-card" style="animation-delay:${Math.min(index*18,260)}ms"><div class="thumb-wrap" data-open="${p.i}"><img class="thumb" loading="lazy" alt="${escapeHtml(p.name)}" data-i="${p.i}" /><span class="loading" data-placeholder="${p.i}">授权读取中...</span></div><div class="meta"><div class="name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div><div class="sub"><span>${formatBytes(p.size)}</span><span>private</span></div><div class="actions"><button class="ghost open" type="button" data-i="${p.i}">预览</button><button class="ghost copy" type="button" data-i="${p.i}">复制路径</button><button class="danger delete" type="button" data-i="${p.i}" title="从私有仓库删除">🗑</button></div></div></article>`).join('')}
+    function readAsBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)})}
+    async function uploadFiles(files){const s=settings();if(!s.token)return toast('上传前请先填写 GitHub Token');const picked=[...files].filter(file=>file.type.startsWith('image/'));if(!picked.length)return toast('没有可上传的图片文件');saveSettings();els.progressWrap.style.display='block';els.progressBar.style.width='0%';els.log.textContent='';let done=0;for(const file of picked){const filename=safeName(file.name);const path=`${s.folder}/${filename}`;try{appendLog(`开始上传：${file.name}`);const content=await readAsBase64(file);const body={message:`Upload private photo: ${filename}`,content,branch:s.branch};const url=`https://api.github.com/repos/${s.owner}/${s.repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;await requestJson(url,{method:'PUT',headers:{...headers(s.token),'Content-Type':'application/json'},body:JSON.stringify(body)});appendLog(`完成：${filename}`)}catch(err){appendLog(`失败：${file.name} -> ${err.message}`)}done++;els.progressBar.style.width=`${Math.round(done/picked.length*100)}%`}toast('上传流程完成，正在刷新私有相册');await loadGallery()}
+    function appendLog(line){els.log.textContent+=`${line}\n`;els.log.scrollTop=els.log.scrollHeight}
+    async function deletePhoto(i){const photo=state.photos.find(p=>p.i===Number(i));if(!photo)return;const s=settings();if(!s.token)return toast('删除前请先填写 GitHub Token');if(!confirm(`确认从私有仓库删除这张照片？\n${photo.path}`))return;try{const url=`https://api.github.com/repos/${s.owner}/${s.repo}/contents/${photo.path.split('/').map(encodeURIComponent).join('/')}`;await requestJson(url,{method:'DELETE',headers:{...headers(s.token),'Content-Type':'application/json'},body:JSON.stringify({message:`Delete private photo: ${photo.name}`,sha:photo.sha,branch:s.branch})});toast('已从私有仓库删除');await loadGallery()}catch(err){toast(`删除失败：${err.message}`)}}
+    async function copyText(text){await navigator.clipboard.writeText(text);toast('已复制私有仓库路径')}
+    async function openModalByIndex(i){const photo=state.photos.find(p=>p.i===Number(i));if(!photo)return;try{const url=await loadBlobUrl(photo);els.modalImg.src=url;els.modalTitle.textContent=photo.name;els.modal.classList.add('open')}catch(err){toast(`预览失败：${err.message}`)}}
+    function closeModal(){els.modal.classList.remove('open');els.modalImg.src=''}
+    function toast(message){els.toast.textContent=message;els.toast.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>els.toast.classList.remove('show'),3200)}
+    els.save.addEventListener('click',saveSettings);els.refresh.addEventListener('click',loadGallery);els.choose.addEventListener('click',()=>els.file.click());els.file.addEventListener('change',e=>uploadFiles(e.target.files));els.search.addEventListener('input',applyFilter);els.closeModal.addEventListener('click',closeModal);els.modal.addEventListener('click',e=>{if(e.target===els.modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});['dragenter','dragover'].forEach(type=>els.dropzone.addEventListener(type,e=>{e.preventDefault();els.dropzone.classList.add('dragover')}));['dragleave','drop'].forEach(type=>els.dropzone.addEventListener(type,e=>{e.preventDefault();els.dropzone.classList.remove('dragover')}));els.dropzone.addEventListener('drop',e=>uploadFiles(e.dataTransfer.files));els.dropzone.addEventListener('click',()=>els.file.click());els.gallery.addEventListener('click',e=>{const open=e.target.closest('.open,.thumb-wrap');if(open)return openModalByIndex(open.dataset.i||open.dataset.open);const copy=e.target.closest('.copy');if(copy){const photo=state.photos.find(p=>p.i===Number(copy.dataset.i));if(photo)return copyText(`${settings().owner}/${settings().repo}:${photo.path}`)}const del=e.target.closest('.delete');if(del)return deletePhoto(del.dataset.i)});window.addEventListener('beforeunload',revokeObjectUrls);loadSettings();if(els.token.value)loadGallery();else applyFilter();
   </script>
 </body>
 </html>
