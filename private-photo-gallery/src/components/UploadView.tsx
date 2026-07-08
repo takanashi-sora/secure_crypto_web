@@ -79,8 +79,8 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
   return (
     <section className="page upload-page">
       <header className="page-heading split-heading">
-        <div><p className="eyebrow">NEW ROLL · 新胶卷</p><h1>把新的记忆，<br />送进私人暗房。</h1></div>
-        <p>上传前只在本机生成预览，并读取拍摄时间与尺寸；GPS 信息不会写入相册。</p>
+        <div><p className="eyebrow">ARCHIVE INTAKE · 新记录</p><h1>把新的记忆，<br />收入巡礼档案袋。</h1></div>
+        <p>先在本机整理照片、日期与尺寸，再收入私有仓库；GPS 信息不会写入档案。</p>
       </header>
 
       <div className="upload-layout">
@@ -94,8 +94,8 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
             onDrop={(event) => { event.preventDefault(); setDragging(false); void addFiles(event.dataTransfer.files); }}
           >
             <span className="drop-camera"><Camera /></span>
-            <strong>拖拽照片到海面</strong>
-            <small>或点击选择多张照片 · JPEG / PNG / WEBP / AVIF</small>
+            <strong>把照片放进今日整理盒</strong>
+            <small>拖拽或点击选择多张照片 · JPEG / PNG / WEBP / AVIF</small>
             <span className="button button-light"><ImagePlus size={17} /> 选择照片</span>
           </button>
           <input ref={input} hidden type="file" accept="image/*" multiple onChange={(event) => { if (event.target.files) void addFiles(event.target.files); event.target.value = ''; }} />
@@ -114,12 +114,12 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
         </div>
 
         <aside className="upload-ticket">
-          <p>SORA PHOTO SERVICE</p>
-          <h2>UPLOAD<br />TICKET</h2>
+          <p>NUMAZU MEMORY ARCHIVE</p>
+          <h2>INTAKE<br />SLIP</h2>
           <dl><div><dt>照片</dt><dd>{queue.length} 张</dd></div><div><dt>总大小</dt><dd>{formatBytes(queue.reduce((sum, item) => sum + item.file.size, 0))}</dd></div><div><dt>目的地</dt><dd>PRIVATE</dd></div></dl>
           {!connected && <div className="notice warning">请先到设置连接私有仓库。</div>}
           <button className="button button-primary wide" disabled={!connected || !queue.length || uploading} onClick={start}>
-            {uploading ? <><LoaderCircle className="spin" /> 上传 {done}/{queue.length}</> : <><UploadCloud /> 开始冲洗</>}
+            {uploading ? <><LoaderCircle className="spin" /> 收入 {done}/{queue.length}</> : <><UploadCloud /> 收入档案柜</>}
           </button>
           {uploading && <div className="progress"><span style={{ width: `${queue.length ? (done / queue.length) * 100 : 0}%` }} /></div>}
           {!!results.length && (

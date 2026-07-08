@@ -37,12 +37,16 @@ describe('vault manifest', () => {
   it('merges repository facts with editable metadata', () => {
     const manifest = updatePhotoMetadata(createEmptyManifest(), photos[1].path, {
       title: '海岸列车',
+      location: '沼津站',
+      mood: '终于抵达',
       favorite: true,
     });
 
     expect(mergePhotos(photos, manifest)[1]).toMatchObject({
       sha: 'train',
       title: '海岸列车',
+      location: '沼津站',
+      mood: '终于抵达',
       favorite: true,
     });
   });

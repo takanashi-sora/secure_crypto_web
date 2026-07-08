@@ -20,6 +20,8 @@ export interface AlbumRecord {
 export interface PhotoMetadata {
   title?: string;
   description?: string;
+  location?: string;
+  mood?: string;
   tags?: string[];
   favorite?: boolean;
   capturedAt?: string;
