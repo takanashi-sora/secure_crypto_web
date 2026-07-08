@@ -79,8 +79,8 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
   return (
     <section className="page upload-page">
       <header className="page-heading split-heading">
-        <div><p className="eyebrow">ARCHIVE INTAKE · 新记录</p><h1>把新的记忆，<br />收入巡礼档案袋。</h1></div>
-        <p>先在本机整理照片、日期与尺寸，再收入私有仓库；GPS 信息不会写入档案。</p>
+        <div><p className="eyebrow">ADD NEW MOMENTS</p><h1>把今天喜欢的光，<br />放进相册。</h1></div>
+        <p>照片会先在本机读取日期与尺寸，再安全写入私有仓库；GPS 信息不会被保存。</p>
       </header>
 
       <div className="upload-layout">
@@ -94,7 +94,7 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
             onDrop={(event) => { event.preventDefault(); setDragging(false); void addFiles(event.dataTransfer.files); }}
           >
             <span className="drop-camera"><Camera /></span>
-            <strong>把照片放进今日整理盒</strong>
+            <strong>把照片轻轻放到这里</strong>
             <small>拖拽或点击选择多张照片 · JPEG / PNG / WEBP / AVIF</small>
             <span className="button button-light"><ImagePlus size={17} /> 选择照片</span>
           </button>
@@ -105,7 +105,7 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
               {queue.map((item, index) => (
                 <article key={item.id}>
                   <img src={item.previewUrl} alt="" />
-                  <div><small>FRAME {String(index + 1).padStart(2, '0')}</small><strong>{item.file.name}</strong><span>{formatBytes(item.file.size)} · {item.width ?? '—'} × {item.height ?? '—'}</span></div>
+                  <div><small>PHOTO {String(index + 1).padStart(2, '0')}</small><strong>{item.file.name}</strong><span>{formatBytes(item.file.size)} · {item.width ?? '—'} × {item.height ?? '—'}</span></div>
                   <button onClick={() => remove(item.id)} aria-label={`移除 ${item.file.name}`}><Trash2 size={18} /></button>
                 </article>
               ))}
@@ -114,12 +114,12 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
         </div>
 
         <aside className="upload-ticket">
-          <p>NUMAZU MEMORY ARCHIVE</p>
-          <h2>INTAKE<br />SLIP</h2>
-          <dl><div><dt>照片</dt><dd>{queue.length} 张</dd></div><div><dt>总大小</dt><dd>{formatBytes(queue.reduce((sum, item) => sum + item.file.size, 0))}</dd></div><div><dt>目的地</dt><dd>PRIVATE</dd></div></dl>
+          <p>PRIVATE UPLOAD</p>
+          <h2>准备<br />上传</h2>
+          <dl><div><dt>照片</dt><dd>{queue.length} 张</dd></div><div><dt>总大小</dt><dd>{formatBytes(queue.reduce((sum, item) => sum + item.file.size, 0))}</dd></div><div><dt>可见范围</dt><dd>仅自己</dd></div></dl>
           {!connected && <div className="notice warning">请先到设置连接私有仓库。</div>}
           <button className="button button-primary wide" disabled={!connected || !queue.length || uploading} onClick={start}>
-            {uploading ? <><LoaderCircle className="spin" /> 收入 {done}/{queue.length}</> : <><UploadCloud /> 收入档案柜</>}
+            {uploading ? <><LoaderCircle className="spin" /> 上传 {done}/{queue.length}</> : <><UploadCloud /> 加入相册</>}
           </button>
           {uploading && <div className="progress"><span style={{ width: `${queue.length ? (done / queue.length) * 100 : 0}%` }} /></div>}
           {!!results.length && (

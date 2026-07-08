@@ -20,7 +20,7 @@ export function SettingsView({ settings, state, error, onSave, onDisconnect }: S
   return (
     <section className="page settings-page">
       <header className="page-heading split-heading">
-        <div><p className="eyebrow">PRIVATE CONNECTION</p><h1>一把钥匙，<br />只留在这台设备。</h1></div>
+        <div><p className="eyebrow">PRIVATE CONNECTION</p><h1>连接你的<br />私人照片空间。</h1></div>
         <p>默认只保存到当前浏览器会话。只有开启“在可信设备记住我”，Token 才会长期保留。</p>
       </header>
 
@@ -41,7 +41,7 @@ export function SettingsView({ settings, state, error, onSave, onDisconnect }: S
         <aside className="security-notes">
           <LockKeyhole size={28} />
           <p className="eyebrow">SECURITY NOTES</p>
-          <h2>照片从未变成公开链接。</h2>
+          <h2>私密，是这个空间安静的底色。</h2>
           <ol><li><span>01</span>Token 仅需授权 photo-vault 仓库。</li><li><span>02</span>权限只开启 Contents: Read and write。</li><li><span>03</span>预览由浏览器创建临时 Blob URL。</li><li><span>04</span>分享调用系统面板，不发布到互联网。</li></ol>
         </aside>
       </div>
