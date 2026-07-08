@@ -1,26 +1,24 @@
-import { Aperture, Images, LibraryBig, Settings, Sparkles, UploadCloud } from 'lucide-react';
+import { Archive, BookOpen, Images, Settings, Stamp, TicketPlus } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { PropsWithChildren } from 'react';
 
 const navigation = [
-  { to: '/', label: '封面', icon: Sparkles },
-  { to: '/library', label: '照片库', icon: Images },
-  { to: '/albums', label: '相册', icon: LibraryBig },
-  { to: '/upload', label: '上传', icon: UploadCloud },
+  { to: '/', label: '扉页', icon: BookOpen },
+  { to: '/library', label: '档案柜', icon: Archive },
+  { to: '/albums', label: '旅程章节', icon: Images },
+  { to: '/upload', label: '收入照片', icon: TicketPlus },
   { to: '/settings', label: '设置', icon: Settings },
 ];
 
 export function Shell({ children }: PropsWithChildren) {
   return (
     <div className="site-shell">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
       <header className="masthead">
         <NavLink to="/" className="brand" aria-label="返回封面">
-          <span className="brand-mark"><Aperture size={21} /></span>
+          <span className="brand-mark"><Stamp size={21} /></span>
           <span>
-            <strong>SORA COASTAL ARCHIVE</strong>
-            <small>沼津海岸写真志 · PRIVATE EDITION</small>
+            <strong>NUMAZU PILGRIMAGE NOTES</strong>
+            <small>沼津巡礼记忆库 · PRIVATE COLLECTION</small>
           </span>
         </NavLink>
         <nav className="desktop-nav" aria-label="主导航">
@@ -39,9 +37,9 @@ export function Shell({ children }: PropsWithChildren) {
         ))}
       </nav>
       <footer className="footer">
-        <span>NUMAZU · SHIZUOKA</span>
-        <span>Photos remain inside your private repository.</span>
-        <span>© {new Date().getFullYear()} SORA</span>
+        <span>沼津 · 内浦 · 旅程记录</span>
+        <span>车票、照片与心情，只收进自己的档案柜。</span>
+        <span>PRIVATE ARCHIVE · {new Date().getFullYear()}</span>
       </footer>
     </div>
   );

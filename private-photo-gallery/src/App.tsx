@@ -220,8 +220,8 @@ export default function App() {
           {connection === 'loading' && <div className="connection-banner"><LoaderCircle className="spin" /> 正在从私有仓库整理照片…</div>}
           {connection === 'error' && location.pathname !== '/settings' && <div className="connection-banner error"><AlertTriangle /> <span>{connectionError}</span><button onClick={() => navigate('/settings')}>检查设置</button><button onClick={() => void loadVault()} aria-label="重试"><RefreshCw /></button></div>}
           <Routes location={location}>
-            <Route path="/" element={<HomeView heroPhotos={heroPhotos} allPhotos={photos} assets={assets} state={connection} onOpen={(photo) => setSelectedPath(photo.path)} />} />
-            <Route path="/library" element={<LibraryView photos={photos} assets={assets} onOpen={(photo) => setSelectedPath(photo.path)} />} />
+            <Route path="/" element={<HomeView heroPhotos={heroPhotos} allPhotos={photos} albums={manifest.albums} assets={assets} state={connection} onOpen={(photo) => setSelectedPath(photo.path)} />} />
+            <Route path="/library" element={<LibraryView photos={photos} albums={manifest.albums} assets={assets} onOpen={(photo) => setSelectedPath(photo.path)} />} />
             <Route path="/albums" element={<AlbumsView albums={manifest.albums} photos={photos} assets={assets} onOpen={(photo) => setSelectedPath(photo.path)} onCreate={createAlbum} />} />
             <Route path="/upload" element={<UploadView connected={connection === 'connected'} onUpload={upload} />} />
             <Route path="/settings" element={<SettingsView settings={settings} state={connection} error={connectionError} onSave={saveConnection} onDisconnect={disconnect} />} />
