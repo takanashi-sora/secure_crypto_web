@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { BookOpen, Heart, Plus, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { PhotoAssetStore } from '../lib/github';
 import type { AlbumRecord, ConnectionState, PhotoRecord } from '../types';
 import { Hero } from './Hero';
@@ -20,12 +21,41 @@ export function HomeView({ heroPhotos, allPhotos, albums, assets, state, onOpen 
   return (
     <div className="home-page">
       <Hero photos={heroPhotos} assets={assets} state={state} onOpen={onOpen} />
+      <section className="room-entrances" aria-label="记忆房间入口">
+        <header>
+          <p className="eyebrow">ROOM MAP</p>
+          <h2>今天从哪扇门进去？</h2>
+          <p className="section-note">这里不是应用菜单，更像房间里的路线图：照片贴在墙上，出行写进路线本，今天带回来的东西先放到门口。</p>
+        </header>
+        <div className="room-grid">
+          <Link className="room-card room-card-photo" to="/library">
+            <span className="room-card-mark">01</span>
+            <strong>照片墙</strong>
+            <em>{allPhotos.length ? `${allPhotos.length} 张记忆贴在墙上` : '等第一张照片亮起来'}</em>
+          </Link>
+          <Link className="room-card room-card-route" to="/albums">
+            <span className="room-card-mark">02</span>
+            <strong>路线本</strong>
+            <em>{albums.length ? `${albums.length} 段小镇路线` : '把一次出行写成章节'}</em>
+          </Link>
+          <Link className="room-card room-card-keepsake" to="/library">
+            <span className="room-card-mark">★</span>
+            <strong>反复翻看的东西</strong>
+            <em>在照片墙里点亮珍藏。</em>
+          </Link>
+          <Link className="room-card room-card-upload" to="/upload">
+            <span className="room-card-mark">＋</span>
+            <strong>把今天带回房间</strong>
+            <em>新照片会先安静收进私有仓库。</em>
+          </Link>
+        </div>
+      </section>
       <section className="recent-ledger">
         <header>
-          <div><p className="eyebrow">SORA'S LATEST PAGE</p><h2>最近翻到的光</h2><p className="section-note">先把最近几张摊在桌面上：有风、有日期，也有一些说不上来的喜欢。</p></div>
-          <div className="ledger-summary"><span>{albums.length} 本小相册</span><span>{allPhotos.length} 张照片</span></div>
+          <div><p className="eyebrow">ON THE WALL</p><h2>墙上刚贴好的片刻</h2><p className="section-note">像部室公告板旁边随手贴上的照片：不急着分类，先让它们带着当天的光留在这里。</p></div>
+          <div className="ledger-summary"><span>{albums.length} 段路线</span><span>{allPhotos.length} 张照片</span></div>
         </header>
-        <PhotoGrid photos={allPhotos.slice(0, 6)} assets={assets} albums={albums} mode="editorial" onOpen={onOpen} emptyMessage={state === 'connected' ? '加入第一张照片，让这一页从喜欢的风景开始。' : '连接私有仓库后，最近的照片会在这里出现。'} />
+        <PhotoGrid photos={allPhotos.slice(0, 6)} assets={assets} albums={albums} mode="editorial" onOpen={onOpen} emptyMessage={state === 'connected' ? '把第一张照片贴上来，这个房间就会开始有声音。' : '连接私有仓库后，墙上会出现最近带回来的照片。'} />
       </section>
     </div>
   );
@@ -62,17 +92,17 @@ export function LibraryView({ photos, albums, assets, onOpen }: LibraryProps) {
 
   return (
     <section className="page library-page">
-      <header className="page-heading library-heading"><div><p className="eyebrow">PHOTO ROOM</p><h1>照片房间</h1><p className="heading-note">想慢慢看，就让照片先说话；想找某一天，再切到整理模式。</p></div><p><strong>{filtered.length}</strong> / {photos.length} PHOTOS</p></header>
+      <header className="page-heading library-heading"><div><p className="eyebrow">MEMORY WALL</p><h1>照片墙</h1><p className="heading-note">像走进海边部室后看到的一面墙：照片、日期、地点和小标签都贴在这里；需要查找时，再把它切成索引板。</p></div><p><strong>{filtered.length}</strong> / {photos.length} PHOTOS</p></header>
       <div className="library-toolbar">
-        <label className="search-box"><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="找一张照片、一处地点，或一个小标签" />{query && <button onClick={() => setQuery('')} aria-label="清空搜索"><X /></button>}</label>
-        <label className="select-box"><SlidersHorizontal /><select value={sort} onChange={(event) => setSort(event.target.value as SortMode)}><option value="newest">最近拍摄</option><option value="name">按名字翻</option><option value="size">按文件大小</option></select></label>
+        <label className="search-box"><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="找某一天、某段坡道、某张海边照片" />{query && <button onClick={() => setQuery('')} aria-label="清空搜索"><X /></button>}</label>
+        <label className="select-box"><SlidersHorizontal /><select value={sort} onChange={(event) => setSort(event.target.value as SortMode)}><option value="newest">按最近的光</option><option value="name">按名字翻</option><option value="size">按文件大小</option></select></label>
         <button className={`filter-button ${favoritesOnly ? 'active' : ''}`} onClick={() => setFavoritesOnly((value) => !value)}><Heart fill={favoritesOnly ? 'currentColor' : 'none'} /> 珍藏</button>
       </div>
       <div className="view-mode-bar" aria-label="照片库浏览模式">
-        <div><button className={mode === 'editorial' ? 'active' : ''} onClick={() => setMode('editorial')}>慢慢翻</button><button className={mode === 'archive' ? 'active' : ''} onClick={() => setMode('archive')}>整理查找</button></div>
-        <p>{mode === 'archive' ? '像 contact sheet 一样规整，但只展示真正写过的地点、旅程和心情。' : '像个人相册页一样错落展开，标题、日期和标签点到为止。'}</p>
+        <div><button className={mode === 'editorial' ? 'active' : ''} onClick={() => setMode('editorial')}>照片墙</button><button className={mode === 'archive' ? 'active' : ''} onClick={() => setMode('archive')}>索引板</button></div>
+        <p>{mode === 'archive' ? '像把墙上的照片取下来排成索引板，方便找地点、章节和心情。' : '像贴在墙上的照片，大小和角度有一点生活感，先保留现场的空气。'}</p>
       </div>
-      {!!tags.length && <div className="tag-filter"><button className={!selectedTag ? 'active' : ''} onClick={() => setSelectedTag('')}>全部小标签</button>{tags.map((tag) => <button className={selectedTag === tag ? 'active' : ''} key={tag} onClick={() => setSelectedTag(tag)}>#{tag}</button>)}</div>}
+      {!!tags.length && <div className="tag-filter"><button className={!selectedTag ? 'active' : ''} onClick={() => setSelectedTag('')}>墙上的全部标签</button>{tags.map((tag) => <button className={selectedTag === tag ? 'active' : ''} key={tag} onClick={() => setSelectedTag(tag)}>#{tag}</button>)}</div>}
       <PhotoGrid photos={filtered} assets={assets} albums={albums} mode={mode} onOpen={onOpen} />
     </section>
   );
@@ -95,7 +125,7 @@ export function AlbumsView({ albums, photos, assets, onOpen, onCreate }: AlbumsP
 
   return (
     <section className="page albums-page">
-      <header className="page-heading split-heading"><div><p className="eyebrow">SMALL JOURNEYS</p><h1>旅程小册</h1><p className="heading-note">按一次出行、一个夏天，或某段想单独收藏的日子来整理。</p></div><button className="button button-primary" onClick={() => setCreating(true)}><Plus /> 新建相册</button></header>
+      <header className="page-heading split-heading"><div><p className="eyebrow">ROUTE NOTEBOOK</p><h1>路线本</h1><p className="heading-note">把一次出行写成一条小镇路线：坡道、海边道路、车站、码头和那天的心情，都可以收进同一章。</p></div><button className="button button-primary" onClick={() => setCreating(true)}><Plus /> 写下新路线</button></header>
       <div className="album-grid">
         {albums.map((album, index) => {
           const items = photos.filter((photo) => photo.albumIds?.includes(album.id));
@@ -103,19 +133,19 @@ export function AlbumsView({ albums, photos, assets, onOpen, onCreate }: AlbumsP
           return (
             <button key={album.id} className="album-card" onClick={() => setSelected(album)}>
               <span className="album-cover">{cover ? <PhotoImage photo={cover} assets={assets} /> : <span className="album-placeholder"><BookOpen /></span>}</span>
-              <span className="album-copy"><small>{String(index + 1).padStart(2, '0')} · {items.length} PHOTOS</small><strong>{album.title}</strong><em>{album.description || '还没有写下这段小旅程的说明。'}</em></span>
+              <span className="album-copy"><small>{String(index + 1).padStart(2, '0')} · {items.length} PHOTOS</small><strong>{album.title}</strong><em>{album.description || '还没有写下这段路线的说明。'}</em></span>
             </button>
           );
         })}
-        {!albums.length && <div className="empty-state album-empty"><span>☁</span><h3>还没有旅程小册</h3><p>新建一个相册，再从照片注记里把喜欢的片刻放进去。</p></div>}
+        {!albums.length && <div className="empty-state album-empty"><span>☁</span><h3>路线本还空着</h3><p>先写下一条路线，再从照片注记里把喜欢的片刻放进去。</p></div>}
       </div>
 
       <AnimatePresence>
-        {selected && <motion.div className="album-drawer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><header><div><small>JOURNEY ALBUM</small><h2>{selected.title}</h2><p>{selected.description}</p></div><button onClick={() => setSelected(undefined)} aria-label="关闭旅程相册"><X /></button></header><PhotoGrid photos={albumPhotos} assets={assets} albums={albums} mode="editorial" onOpen={onOpen} emptyMessage="编辑照片注记时，可以把照片加入这个相册。" /></motion.div>}
+        {selected && <motion.div className="album-drawer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><header><div><small>ROUTE NOTEBOOK</small><h2>{selected.title}</h2><p>{selected.description}</p></div><button onClick={() => setSelected(undefined)} aria-label="关闭路线本"><X /></button></header><PhotoGrid photos={albumPhotos} assets={assets} albums={albums} mode="editorial" onOpen={onOpen} emptyMessage="编辑照片注记时，可以把照片贴进这条路线。" /></motion.div>}
       </AnimatePresence>
 
       <AnimatePresence>
-        {creating && <motion.div className="dialog-wrap" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><button className="dialog-backdrop" onClick={() => setCreating(false)} aria-label="取消" /><form className="dialog" onSubmit={(event) => { event.preventDefault(); void onCreate(title, description).then(() => { setCreating(false); setTitle(''); setDescription(''); }); }}><p className="eyebrow">NEW ALBUM</p><h2>创建新的旅程相册</h2><label>相册名称<input autoFocus required value={title} onChange={(event) => setTitle(event.target.value)} placeholder="例如：内浦的夏日傍晚" /></label><label>相册说明<textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder="那天去了哪里，又留下了什么" /></label><div className="form-actions"><button className="button button-primary" type="submit">创建相册</button><button className="button button-ghost" type="button" onClick={() => setCreating(false)}>取消</button></div></form></motion.div>}
+        {creating && <motion.div className="dialog-wrap" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><button className="dialog-backdrop" onClick={() => setCreating(false)} aria-label="取消" /><form className="dialog" onSubmit={(event) => { event.preventDefault(); void onCreate(title, description).then(() => { setCreating(false); setTitle(''); setDescription(''); }); }}><p className="eyebrow">NEW ROUTE</p><h2>写下一条新的路线</h2><label>路线名称<input autoFocus required value={title} onChange={(event) => setTitle(event.target.value)} placeholder="例如：夏日傍晚的海边路" /></label><label>路线说明<textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder="那天经过了哪里，又把什么带回来了" /></label><div className="form-actions"><button className="button button-primary" type="submit">写进路线本</button><button className="button button-ghost" type="button" onClick={() => setCreating(false)}>取消</button></div></form></motion.div>}
       </AnimatePresence>
     </section>
   );

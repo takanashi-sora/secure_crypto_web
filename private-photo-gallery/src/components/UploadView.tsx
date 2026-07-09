@@ -79,8 +79,8 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
   return (
     <section className="page upload-page">
       <header className="page-heading split-heading">
-        <div><p className="eyebrow">ADD NEW MOMENTS</p><h1>把今天喜欢的光，<br />放进相册。</h1></div>
-        <p>照片会先在本机读取日期与尺寸，再安全写入私有仓库；GPS 信息不会被保存。</p>
+        <div><p className="eyebrow">BRING TODAY BACK</p><h1>把今天，<br />带回房间。</h1></div>
+        <p>像回到部室后把照片放到桌上：先在本机读取日期与尺寸，再安全写入私有仓库；GPS 信息不会被保存。</p>
       </header>
 
       <div className="upload-layout">
@@ -94,7 +94,7 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
             onDrop={(event) => { event.preventDefault(); setDragging(false); void addFiles(event.dataTransfer.files); }}
           >
             <span className="drop-camera"><Camera /></span>
-            <strong>把照片轻轻放到这里</strong>
+            <strong>把今天带回来的照片放到这里</strong>
             <small>拖拽或点击选择多张照片 · JPEG / PNG / WEBP / AVIF</small>
             <span className="button button-light"><ImagePlus size={17} /> 选择照片</span>
           </button>
@@ -114,12 +114,12 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
         </div>
 
         <aside className="upload-ticket">
-          <p>PRIVATE UPLOAD</p>
-          <h2>准备<br />上传</h2>
+          <p>ROOM CHECK-IN</p>
+          <h2>放进<br />房间前</h2>
           <dl><div><dt>照片</dt><dd>{queue.length} 张</dd></div><div><dt>总大小</dt><dd>{formatBytes(queue.reduce((sum, item) => sum + item.file.size, 0))}</dd></div><div><dt>可见范围</dt><dd>仅自己</dd></div></dl>
           {!connected && <div className="notice warning">请先到设置连接私有仓库。</div>}
           <button className="button button-primary wide" disabled={!connected || !queue.length || uploading} onClick={start}>
-            {uploading ? <><LoaderCircle className="spin" /> 上传 {done}/{queue.length}</> : <><UploadCloud /> 加入相册</>}
+            {uploading ? <><LoaderCircle className="spin" /> 收进房间 {done}/{queue.length}</> : <><UploadCloud /> 放进照片墙</>}
           </button>
           {uploading && <div className="progress"><span style={{ width: `${queue.length ? (done / queue.length) * 100 : 0}%` }} /></div>}
           {!!results.length && (
