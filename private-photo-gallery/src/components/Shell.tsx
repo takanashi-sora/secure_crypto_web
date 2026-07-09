@@ -1,4 +1,4 @@
-import { Aperture, CloudSun, Images, Library, Settings, UploadCloud } from 'lucide-react';
+import { CloudSun, Images, Library, Settings, UploadCloud } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { PropsWithChildren } from 'react';
 
@@ -13,12 +13,32 @@ const navigation = [
 export function Shell({ children }: PropsWithChildren) {
   return (
     <div className="site-shell">
+      <div className="coastal-atmosphere" aria-hidden="true">
+        <span className="sky-bloom bloom-one" />
+        <span className="sky-bloom bloom-two" />
+        <span className="distant-sun" />
+        <span className="distant-mountain mountain-a" />
+        <span className="distant-mountain mountain-b" />
+        <span className="sea-horizon" />
+        <span className="water-glint glint-one" />
+        <span className="water-glint glint-two" />
+        <span className="breakwater-line" />
+        <span className="wind-line wind-one" />
+        <span className="wind-line wind-two" />
+        <span className="sora-star star-one">✦</span>
+        <span className="sora-star star-two">✧</span>
+        <span className="sora-dot dot-one" />
+        <span className="sora-dot dot-two" />
+      </div>
       <header className="masthead">
         <NavLink to="/" className="brand" aria-label="返回首页">
-          <span className="brand-mark"><Aperture size={20} /></span>
+          <span className="brand-mark">
+            <span className="brand-wave" />
+            <span className="brand-star">✦</span>
+          </span>
           <span>
-            <strong>SORA'S PHOTO SPACE</strong>
-            <small>takanashi.moe · private memories</small>
+            <strong>SORA PHOTO ROOM</strong>
+            <small>takanashi.moe / sea-side memories</small>
           </span>
         </NavLink>
         <nav className="desktop-nav" aria-label="主导航">
@@ -37,8 +57,8 @@ export function Shell({ children }: PropsWithChildren) {
         ))}
       </nav>
       <footer className="footer">
-        <span>SORA'S PRIVATE PHOTO SPACE</span>
-        <span>光、海风，以及想要记住的普通一天。</span>
+        <span>SORA PHOTO ROOM</span>
+        <span>海边的光、很小的收藏、还有普通一天的心情。</span>
         <span>takanashi.moe · {new Date().getFullYear()}</span>
       </footer>
     </div>
