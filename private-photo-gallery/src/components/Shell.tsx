@@ -23,6 +23,9 @@ export function Shell({ children }: PropsWithChildren) {
         <span className="water-glint glint-one" />
         <span className="water-glint glint-two" />
         <span className="breakwater-line" />
+        <span className="coast-road-line" />
+        <span className="bay-railing-line" />
+        <span className="little-stop-sign" />
         <span className="wind-line wind-one" />
         <span className="wind-line wind-two" />
         <span className="sora-star star-one">✦</span>
@@ -33,7 +36,10 @@ export function Shell({ children }: PropsWithChildren) {
       <header className="masthead">
         <NavLink to="/" className="brand" aria-label="返回首页">
           <span className="brand-mark">
+            <span className="brand-bay" />
+            <span className="brand-mikan" />
             <span className="brand-wave" />
+            <span className="brand-coast" />
             <span className="brand-star">✦</span>
           </span>
           <span>

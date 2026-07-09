@@ -16,7 +16,7 @@ interface HeroProps {
 export function Hero({ photos, assets, state, onOpen }: HeroProps) {
   const [active, setActive] = useState(0);
   const current = photos[active % Math.max(photos.length, 1)];
-  const smallPhotos = photos.filter((photo) => photo.path !== current?.path).slice(0, 2);
+  const smallPhotos = photos.filter((photo) => photo.path !== current?.path).slice(0, 1);
   const latestLabel = current?.capturedAt ? displayDate(current.capturedAt) : 'today';
 
   useEffect(() => setActive(0), [photos]);
@@ -29,6 +29,9 @@ export function Hero({ photos, assets, state, onOpen }: HeroProps) {
         <span className="hero-mountain mountain-right" />
         <span className="hero-sea" />
         <span className="hero-pier" />
+        <span className="hero-coast-road" />
+        <span className="hero-guardrail" />
+        <span className="hero-stop-marker" />
         <span className="hero-wind hero-wind-a" />
         <span className="hero-wind hero-wind-b" />
         <span className="hero-star">✦</span>
@@ -38,9 +41,9 @@ export function Hero({ photos, assets, state, onOpen }: HeroProps) {
         <h1>海边的光，<br /><em>放进小相册。</em></h1>
         <p className="hero-intro">不是作品集，也不是后台。这里放着旅途中遇见的海风、车站旁的光、顺手买下的小东西，以及只有自己知道为什么会想念的照片。</p>
         <div className="hero-micro-notes" aria-label="照片空间氛围">
-          <span>after school light</span>
-          <span>sea breeze</span>
-          <span>mikan memo</span>
+          <span>帰り道の光</span>
+          <span>海風</span>
+          <span>みかん色</span>
         </div>
         <div className="hero-actions">
           <Link className="button button-primary" to={state === 'connected' ? '/library' : '/settings'}>
@@ -90,9 +93,9 @@ export function Hero({ photos, assets, state, onOpen }: HeroProps) {
           )}
 
           <div className="hero-note-card">
-            <small><CalendarDays size={13} /> latest page</small>
+            <small><CalendarDays size={13} /> room memo</small>
             <strong>{latestLabel}</strong>
-            <span>今天也把一点光留下。</span>
+            <span>把一点喜欢，轻轻夹在这里。</span>
           </div>
 
         {photos.length > 1 && (
