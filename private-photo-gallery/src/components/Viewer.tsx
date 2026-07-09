@@ -130,16 +130,17 @@ export function Viewer({ photo, photos, albums, assets, onClose, onSelect, onSav
                 </div>
               ) : (
                 <>
+                  <div className="photo-back-stickers" aria-hidden="true"><span>✦</span><span>sea-side note</span></div>
                   {photo.capturedAt && <div className="photo-date-stamp"><small>CAPTURED</small><strong>{displayDate(photo.capturedAt)}</strong></div>}
-                  <p className="caption-kicker">PHOTO NOTE</p>
+                  <p className="caption-kicker">SORA NOTE</p>
                   <h2>{photo.title || photo.name.replace(/\.[^.]+$/, '')}</h2>
                   {(photo.location || photo.mood) && <div className="back-meta">{photo.location && <span><MapPin />{photo.location}</span>}{photo.mood && <span><Smile />{photo.mood}</span>}</div>}
                   {photo.description && <div className="handwritten-note">{photo.description}</div>}
                   <div className="tag-row">{photo.tags?.map((tag) => <span key={tag}>#{tag}</span>)}</div>
                   {!!chapterNames.length && <div className="bound-chapters"><small>旅程相册</small>{chapterNames.map((name) => <span key={name}>{name}</span>)}</div>}
                   <div className="viewer-actions">
-                    <button className={`keepsake-button ${photo.favorite ? 'active' : ''}`} onClick={() => void onSave(photo, { favorite: !photo.favorite })}><BookmarkCheck />{photo.favorite ? '已珍藏' : '珍藏这张照片'}</button>
-                    <button className="button button-ghost" onClick={() => setEditing(true)}>编辑注记</button>
+                    <button className={`keepsake-button ${photo.favorite ? 'active' : ''}`} onClick={() => void onSave(photo, { favorite: !photo.favorite })}><BookmarkCheck />{photo.favorite ? '已经放进小收藏' : '收入小收藏'}</button>
+                    <button className="button button-ghost" onClick={() => setEditing(true)}>补一点注记</button>
                     <button className="round-action" onClick={share} aria-label="分享或下载"><Share2 /></button>
                   </div>
                   <button className="delete-record" onClick={() => void onDelete(photo)}><Trash2 />删除这张照片</button>

@@ -17,7 +17,7 @@ interface PhotoGridProps {
 
 export function PhotoGrid({ photos, assets, albums = [], mode = 'editorial', onOpen, emptyMessage }: PhotoGridProps) {
   if (!photos.length) {
-    return <div className="empty-state"><span>°｡⋆</span><h3>这里还没有照片</h3><p>{emptyMessage ?? '换个筛选条件，或加入一张新的照片。'}</p></div>;
+    return <div className="empty-state"><span>°｡⋆</span><h3>这一页还没有照片</h3><p>{emptyMessage ?? '换个筛选条件，或把今天喜欢的一张放进来。'}</p></div>;
   }
 
   const albumNames = new Map(albums.map((album) => [album.id, album.title]));
@@ -29,9 +29,12 @@ export function PhotoGrid({ photos, assets, albums = [], mode = 'editorial', onO
         const title = photo.title || photo.name.replace(/\.[^.]+$/, '');
         const archiveDetails = [photo.location, chapter, photo.mood].filter(Boolean);
         return (
-          <article className={`record-card card-shape-${index % 7}`} key={photo.path}>
+          <article className={`record-card tone-${index % 4} card-shape-${index % 7}`} key={photo.path}>
             <button className="record-photo" onClick={() => onOpen(photo)} aria-label={`查看 ${title}`}>
               <PhotoImage photo={photo} assets={assets} />
+              <span className="photo-washi" />
+              <span className="record-glimmer" />
+              <span className="memory-index">{mode === 'archive' ? String(index + 1).padStart(3, '0') : '✦'}</span>
               {photo.favorite && <Heart className="favorite-mark" size={17} fill="currentColor" />}
               {photo.metadataPending && <CloudAlert className="pending-mark" size={17} aria-label="元数据等待同步" />}
             </button>
