@@ -26,6 +26,13 @@ export interface GalleryTheme {
     roomBg: string;
     motif: string;
     mapLine: string;
+    scenes: {
+      home: string;
+      library: string;
+      albums: string;
+      upload: string;
+      viewer: string;
+    };
   };
   motifs: string[];
   navigation: {
@@ -164,6 +171,13 @@ export const themes: Record<string, GalleryTheme> = {
       roomBg: generated('numazu/hero-bg.webp'),
       motif: generated('numazu/motif.svg'),
       mapLine: generated('numazu/map-line.svg'),
+      scenes: {
+        home: generated('numazu/hero-scene.webp'),
+        library: generated('numazu/wall-scene.webp'),
+        albums: generated('numazu/route-scene.webp'),
+        upload: generated('numazu/upload-scene.webp'),
+        viewer: generated('numazu/viewer-scene.webp'),
+      },
     },
     motifs: ['海边道路', '内浦湾', '远山', '巴士站', '部室照片墙', '路线本', '蜜柑橙'],
     navigation: {
@@ -376,5 +390,10 @@ export function themeStyle(theme: GalleryTheme) {
     '--theme-cream': theme.colors.cream,
     '--theme-hero-bg': `url("${themedAsset(theme.assets.heroBg)}")`,
     '--theme-room-bg': `url("${themedAsset(theme.assets.roomBg)}")`,
+    '--theme-home-scene': `url("${themedAsset(theme.assets.scenes.home)}")`,
+    '--theme-library-scene': `url("${themedAsset(theme.assets.scenes.library)}")`,
+    '--theme-albums-scene': `url("${themedAsset(theme.assets.scenes.albums)}")`,
+    '--theme-upload-scene': `url("${themedAsset(theme.assets.scenes.upload)}")`,
+    '--theme-viewer-scene': `url("${themedAsset(theme.assets.scenes.viewer)}")`,
   } as CSSProperties;
 }

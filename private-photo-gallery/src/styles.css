@@ -3314,3 +3314,330 @@ svg { flex: 0 0 auto; }
       var(--theme-hero-bg) center / cover no-repeat;
   }
 }
+
+/* Scene-themed gallery layer: each major room gets its own illustrated setting instead of one reusable backdrop. */
+.site-shell {
+  --scene-panel-shadow: 0 26px 82px rgba(29, 88, 116, .16);
+}
+.site-shell::before {
+  background:
+    linear-gradient(180deg, rgba(248,253,255,.76), rgba(255,250,241,.74)),
+    radial-gradient(circle at 15% 12%, color-mix(in srgb, var(--theme-water) 30%, transparent), transparent 35%),
+    var(--theme-home-scene) center / cover no-repeat;
+  opacity: .36;
+  filter: saturate(.96) blur(.4px);
+}
+.memory-hero {
+  min-height: min(780px, calc(100dvh - 118px));
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.9) 0 34%, rgba(235,250,255,.56) 54%, rgba(255,248,234,.24)),
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--theme-accent) 26%, transparent), transparent 32%),
+    var(--theme-home-scene) center / cover no-repeat;
+}
+.memory-hero::before {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.82), transparent 46%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.28));
+}
+.memory-hero::after {
+  opacity: .18;
+}
+.hero-scene {
+  opacity: .16;
+  mix-blend-mode: soft-light;
+}
+.hero-copy {
+  background:
+    linear-gradient(150deg, rgba(255,255,255,.78), rgba(232,249,255,.58)),
+    radial-gradient(circle at 8% 0, rgba(255,255,255,.9), transparent 34%);
+  box-shadow: 0 24px 80px rgba(24, 84, 111, .14);
+}
+.cover-board {
+  box-shadow: 0 32px 96px rgba(19, 72, 100, .2);
+}
+.coastline-art {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(221,247,255,.22)),
+    var(--theme-home-scene) center / cover no-repeat;
+}
+.room-entrances {
+  background:
+    linear-gradient(140deg, rgba(255,255,255,.86), rgba(226,248,255,.62), rgba(255,250,241,.68)),
+    var(--theme-library-scene) center / cover no-repeat;
+  background-blend-mode: normal, soft-light;
+}
+.room-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.room-card::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  opacity: .32;
+  background: var(--room-scene, var(--theme-home-scene)) center / cover no-repeat;
+  transform: scale(1.03);
+  transition: transform .35s ease, opacity .35s ease;
+}
+.room-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(255,255,255,.78), rgba(255,255,255,.52) 46%, rgba(226,248,255,.38));
+}
+.room-card:hover::before {
+  opacity: .42;
+  transform: scale(1.08);
+}
+.room-card-photo { --room-scene: var(--theme-library-scene); }
+.room-card-route { --room-scene: var(--theme-albums-scene); }
+.room-card-keepsake { --room-scene: var(--theme-viewer-scene); }
+.room-card-upload { --room-scene: var(--theme-upload-scene); }
+.page {
+  position: relative;
+  isolation: isolate;
+}
+.library-page { --page-scene: var(--theme-library-scene); --page-room-label: "club room photo wall"; }
+.albums-page { --page-scene: var(--theme-albums-scene); --page-room-label: "route notebook desk"; }
+.upload-page { --page-scene: var(--theme-upload-scene); --page-room-label: "bring today back"; }
+.library-page::after,
+.albums-page::after,
+.upload-page::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 28px;
+  width: min(100%, 1480px);
+  height: min(430px, 52vw);
+  border: 1px solid rgba(255,255,255,.66);
+  border-radius: 44px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.78) 70%, rgba(255,255,255,.9)),
+    radial-gradient(circle at 12% 12%, rgba(255,255,255,.88), transparent 28%),
+    var(--page-scene) center / cover no-repeat;
+  box-shadow: var(--scene-panel-shadow);
+  opacity: .72;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.library-page::before,
+.albums-page::before,
+.upload-page::before {
+  content: var(--page-room-label);
+  z-index: 0;
+  left: auto;
+  right: 4%;
+  top: 74px;
+  width: auto;
+  height: auto;
+  padding: 8px 12px;
+  opacity: .72;
+  color: color-mix(in srgb, var(--theme-deep) 66%, white);
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 999px;
+  background: rgba(255,255,255,.58);
+  box-shadow: 0 12px 30px rgba(40,103,132,.1);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+}
+.page-heading,
+.library-toolbar,
+.view-mode-bar,
+.tag-filter,
+.album-grid,
+.upload-layout {
+  position: relative;
+  z-index: 1;
+}
+.page-heading {
+  padding: 28px;
+  border: 1px solid rgba(255,255,255,.74);
+  border-radius: 34px;
+  background: linear-gradient(145deg, rgba(255,255,255,.8), rgba(233,249,255,.56));
+  box-shadow: 0 16px 52px rgba(42,104,132,.1);
+  backdrop-filter: blur(16px);
+}
+.library-page .photo-grid.editorial,
+.home-page .photo-grid.editorial {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.68), rgba(226,248,255,.45), rgba(255,250,241,.48)),
+    var(--theme-library-scene) center / cover no-repeat;
+  background-blend-mode: normal, soft-light;
+}
+.albums-page .photo-grid.editorial,
+.album-drawer .photo-grid.editorial {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.7), rgba(255,250,241,.54), rgba(232,249,255,.38)),
+    var(--theme-albums-scene) center / cover no-repeat;
+  background-blend-mode: normal, soft-light;
+}
+.library-page .photo-grid.archive {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.72), rgba(232,249,255,.48)),
+    var(--theme-library-scene) center / cover no-repeat;
+  background-blend-mode: normal, soft-light;
+}
+.album-card {
+  position: relative;
+  overflow: hidden;
+}
+.album-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .2;
+  background: var(--theme-albums-scene) center / cover no-repeat;
+  pointer-events: none;
+}
+.upload-page .drop-studio {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.8), rgba(232,249,255,.52)),
+    var(--theme-upload-scene) center / cover no-repeat;
+  background-blend-mode: normal, soft-light;
+}
+.upload-page .drop-studio::before {
+  background:
+    radial-gradient(circle at 50% 34%, rgba(255,255,255,.72), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.38), transparent);
+}
+.upload-ticket {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,250,241,.64)),
+    var(--theme-upload-scene) 70% 50% / cover no-repeat;
+  background-blend-mode: normal, soft-light;
+}
+
+/* Hard viewer constraints: large photos must remain inside the viewport; notes scroll independently. */
+.viewer {
+  padding: 16px;
+  overflow: hidden;
+}
+.viewer-backdrop {
+  background:
+    linear-gradient(90deg, rgba(8,22,36,.76), rgba(13,46,70,.54)),
+    var(--theme-viewer-scene) center / cover no-repeat;
+  backdrop-filter: blur(18px) saturate(.9);
+}
+.viewer-stage {
+  width: min(1560px, calc(100vw - 32px));
+  height: min(920px, calc(100dvh - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 410px);
+  grid-template-rows: 62px minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  background:
+    linear-gradient(135deg, rgba(13,48,72,.96), rgba(19,68,95,.92)),
+    var(--theme-viewer-scene) center / cover no-repeat;
+  background-blend-mode: normal, soft-light;
+}
+.viewer-topbar,
+.viewer-photo-wrap,
+.viewer-caption,
+.photo-back {
+  min-width: 0;
+  min-height: 0;
+}
+.viewer-photo-wrap {
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+.viewer-photo-wrap > div,
+.viewer-photo-wrap .photo-image-shell {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.viewer-photo-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.viewer-caption,
+.photo-back {
+  max-height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.photo-back {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74,143,176,.34) transparent;
+}
+
+@media (max-width: 980px) {
+  .viewer {
+    padding: 0;
+  }
+  .viewer-stage {
+    width: 100vw;
+    height: 100dvh;
+    max-width: 100vw;
+    max-height: 100dvh;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 58px minmax(0, 56dvh) minmax(0, 1fr);
+    border: 0;
+    border-radius: 0;
+  }
+  .photo-back {
+    max-height: none;
+    border-left: 0;
+    border-top: 1px solid rgba(255,255,255,.68);
+  }
+}
+
+@media (max-width: 760px) {
+  .memory-hero {
+    min-height: 0;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.36), rgba(232,249,255,.5) 62%, rgba(255,250,241,.76)),
+      var(--theme-home-scene) center / cover no-repeat;
+  }
+  .library-page::after,
+  .albums-page::after,
+  .upload-page::after {
+    top: 40px;
+    height: 320px;
+    border-radius: 28px;
+    opacity: .58;
+  }
+  .library-page::before,
+  .albums-page::before,
+  .upload-page::before {
+    display: none;
+  }
+  .page-heading {
+    padding: 20px 16px;
+    border-radius: 26px;
+  }
+  .viewer-stage {
+    grid-template-rows: 58px minmax(0, 52dvh) minmax(0, 1fr);
+  }
+  .viewer-photo-wrap {
+    padding: 6px;
+  }
+  .viewer-photo-wrap img {
+    width: 100%;
+    height: 100%;
+  }
+}
