@@ -3,10 +3,10 @@ import { NavLink } from 'react-router-dom';
 import type { PropsWithChildren } from 'react';
 
 const navigation = [
-  { to: '/', label: '首页', icon: CloudSun },
-  { to: '/library', label: '照片', icon: Library },
-  { to: '/albums', label: '旅程', icon: Images },
-  { to: '/upload', label: '上传', icon: UploadCloud },
+  { to: '/', label: '入口', icon: CloudSun },
+  { to: '/library', label: '照片墙', icon: Library },
+  { to: '/albums', label: '路线本', icon: Images },
+  { to: '/upload', label: '带回', icon: UploadCloud },
   { to: '/settings', label: '设置', icon: Settings },
 ];
 
@@ -23,6 +23,11 @@ export function Shell({ children }: PropsWithChildren) {
         <span className="water-glint glint-one" />
         <span className="water-glint glint-two" />
         <span className="breakwater-line" />
+        <span className="coast-road-line" />
+        <span className="bay-railing-line" />
+        <span className="little-stop-sign" />
+        <span className="school-slope-line" />
+        <span className="club-window-line" />
         <span className="wind-line wind-one" />
         <span className="wind-line wind-two" />
         <span className="sora-star star-one">✦</span>
@@ -33,12 +38,15 @@ export function Shell({ children }: PropsWithChildren) {
       <header className="masthead">
         <NavLink to="/" className="brand" aria-label="返回首页">
           <span className="brand-mark">
+            <span className="brand-bay" />
+            <span className="brand-mikan" />
             <span className="brand-wave" />
+            <span className="brand-coast" />
             <span className="brand-star">✦</span>
           </span>
           <span>
             <strong>SORA PHOTO ROOM</strong>
-            <small>takanashi.moe / sea-side memories</small>
+            <small>takanashi.moe / after-school sea gate</small>
           </span>
         </NavLink>
         <nav className="desktop-nav" aria-label="主导航">
@@ -58,7 +66,7 @@ export function Shell({ children }: PropsWithChildren) {
       </nav>
       <footer className="footer">
         <span>SORA PHOTO ROOM</span>
-        <span>海边的光、很小的收藏、还有普通一天的心情。</span>
+        <span>放学后的海、贴在墙上的照片、还有我带回来的普通一天。</span>
         <span>takanashi.moe · {new Date().getFullYear()}</span>
       </footer>
     </div>
