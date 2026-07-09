@@ -1,19 +1,25 @@
 import { CloudSun, Images, Library, Settings, UploadCloud } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import type { PropsWithChildren } from 'react';
+import { themedAsset, themeStyle, type GalleryTheme } from '../themes';
 
-const navigation = [
-  { to: '/', label: '入口', icon: CloudSun },
-  { to: '/library', label: '照片墙', icon: Library },
-  { to: '/albums', label: '路线本', icon: Images },
-  { to: '/upload', label: '带回', icon: UploadCloud },
-  { to: '/settings', label: '设置', icon: Settings },
-];
+interface ShellProps extends PropsWithChildren {
+  theme: GalleryTheme;
+}
 
-export function Shell({ children }: PropsWithChildren) {
+export function Shell({ children, theme }: ShellProps) {
+  const navigation = [
+    { to: '/', label: theme.navigation.home, icon: CloudSun },
+    { to: '/library', label: theme.navigation.library, icon: Library },
+    { to: '/albums', label: theme.navigation.albums, icon: Images },
+    { to: '/upload', label: theme.navigation.upload, icon: UploadCloud },
+    { to: '/settings', label: theme.navigation.settings, icon: Settings },
+  ];
+
   return (
-    <div className="site-shell">
+    <div className={`site-shell ${theme.className}`} data-theme={theme.id} style={themeStyle(theme)}>
       <div className="coastal-atmosphere" aria-hidden="true">
+        <img className="theme-backdrop" src={themedAsset(theme.assets.roomBg)} alt="" />
         <span className="sky-bloom bloom-one" />
         <span className="sky-bloom bloom-two" />
         <span className="distant-sun" />
@@ -38,6 +44,7 @@ export function Shell({ children }: PropsWithChildren) {
       <header className="masthead">
         <NavLink to="/" className="brand" aria-label="返回首页">
           <span className="brand-mark">
+            <img className="theme-motif" src={themedAsset(theme.assets.motif)} alt="" />
             <span className="brand-bay" />
             <span className="brand-mikan" />
             <span className="brand-wave" />
@@ -45,8 +52,8 @@ export function Shell({ children }: PropsWithChildren) {
             <span className="brand-star">✦</span>
           </span>
           <span>
-            <strong>SORA PHOTO ROOM</strong>
-            <small>takanashi.moe / after-school sea gate</small>
+            <strong>{theme.site.brand}</strong>
+            <small>{theme.site.tagline}</small>
           </span>
         </NavLink>
         <nav className="desktop-nav" aria-label="主导航">
@@ -65,8 +72,8 @@ export function Shell({ children }: PropsWithChildren) {
         ))}
       </nav>
       <footer className="footer">
-        <span>SORA PHOTO ROOM</span>
-        <span>放学后的海、贴在墙上的照片、还有我带回来的普通一天。</span>
+        <span>{theme.shortName}</span>
+        <span>{theme.site.footer}</span>
         <span>takanashi.moe · {new Date().getFullYear()}</span>
       </footer>
     </div>

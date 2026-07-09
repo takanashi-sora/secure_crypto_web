@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { displayDate } from '../lib/format';
 import type { PhotoAssetStore } from '../lib/github';
+import { themedAsset, type GalleryTheme } from '../themes';
 import type { ConnectionState, PhotoRecord } from '../types';
 import { PhotoImage } from './PhotoImage';
 
@@ -10,10 +11,11 @@ interface HeroProps {
   photos: PhotoRecord[];
   assets: PhotoAssetStore;
   state: ConnectionState;
+  theme: GalleryTheme;
   onOpen: (photo: PhotoRecord) => void;
 }
 
-export function Hero({ photos, assets, state, onOpen }: HeroProps) {
+export function Hero({ photos, assets, state, theme, onOpen }: HeroProps) {
   const [active, setActive] = useState(0);
   const current = photos[active % Math.max(photos.length, 1)];
   const smallPhotos = photos.filter((photo) => photo.path !== current?.path).slice(0, 2);
@@ -40,35 +42,32 @@ export function Hero({ photos, assets, state, onOpen }: HeroProps) {
         <span className="hero-star">✦</span>
       </div>
       <div className="hero-copy">
-        <div className="soft-kicker"><span className="mikan-dot" /> takanashi.moe private gate <Sparkles size={14} /></div>
-        <h1>推开门，<br /><em>海风在放学后。</em></h1>
-        <p className="hero-intro">这里不是官方主题页，也不是普通相册。它更像我自己的入口：把海边道路、站牌、练习后的光、顺手带回的小东西，和那些只属于自己的照片，一起贴进这个房间。</p>
+        <div className="soft-kicker"><span className="mikan-dot" /> {theme.hero.kicker} <Sparkles size={14} /></div>
+        <h1>{theme.hero.title}<br /><em>{theme.hero.emphasis}</em></h1>
+        <p className="hero-intro">{theme.hero.intro}</p>
         <div className="hero-micro-notes" aria-label="照片空间氛围">
-          <span>放課後</span>
-          <span>海辺の町</span>
-          <span>route note</span>
+          {theme.hero.notes.map((note) => <span key={note}>{note}</span>)}
         </div>
         <div className="hero-actions">
           <Link className="button button-primary" to={state === 'connected' ? '/library' : '/settings'}>
-            {state === 'connected' ? '走进照片墙' : '连接私人入口'} <ArrowRight size={17} />
+            {state === 'connected' ? theme.hero.ctaConnected : theme.hero.ctaDisconnected} <ArrowRight size={17} />
           </Link>
-          <Link className="text-link" to="/upload">把今天带回房间</Link>
+          <Link className="text-link" to="/upload">{theme.hero.secondaryCta}</Link>
         </div>
         <div className={`privacy-chip ${state === 'connected' ? 'connected' : ''}`}>
           {state === 'connected' ? <Waves size={16} /> : <KeyRound size={16} />}
-          <span>{state === 'connected' ? `${photos.length} 张照片 · 只在你的私有仓库里亮着` : '入口会从你的私有仓库读取照片'}</span>
+          <span>{state === 'connected' ? theme.hero.connectedStatus(photos.length) : theme.hero.idleStatus}</span>
         </div>
       </div>
 
       <div className="hero-gallery">
         <div className="cover-board">
-          <div className="board-label"><span>club room wall</span><small>after school / sea breeze</small></div>
+          <img className="theme-map-line" src={themedAsset(theme.assets.mapLine)} alt="" aria-hidden="true" />
+          <div className="board-label"><span>{theme.hero.boardLabel}</span><small>{theme.hero.boardSubLabel}</small></div>
           <div className="clubroom-window" aria-hidden="true"><span /><span /></div>
           <div className="timetable-card" aria-hidden="true">
-            <small>BUS STOP</small>
-            <span>07:42</span>
-            <span>16:18</span>
-            <span>18:03</span>
+            <small>{theme.hero.timetableLabel}</small>
+            {theme.hero.timetableItems.map((item) => <span key={item}>{item}</span>)}
           </div>
           <div className="board-pin pin-a" />
           <div className="board-pin pin-b" />
@@ -89,7 +88,7 @@ export function Hero({ photos, assets, state, onOpen }: HeroProps) {
             <span className="sea-line line-one" />
             <span className="sea-line line-two" />
             <span className="pier-line" />
-            <span className="empty-coast-copy"><MapPin size={16} /> 第一张照片会成为入口</span>
+            <span className="empty-coast-copy"><MapPin size={16} /> {theme.hero.emptyHero}</span>
           </div>
         )}
 
@@ -104,15 +103,15 @@ export function Hero({ photos, assets, state, onOpen }: HeroProps) {
           )}
 
           <div className="hero-note-card">
-            <small><CalendarDays size={13} /> after school memo</small>
+            <small><CalendarDays size={13} /> {theme.hero.noteLabel}</small>
             <strong>{latestLabel}</strong>
-            <span>练习后的风、海边路的白线，还有今天想留下的那一张。</span>
+            <span>{theme.hero.noteText}</span>
           </div>
 
           <div className="route-memo-card">
             <small>ROUTE NOTE</small>
-            <strong>坂道 → 海边路 → 小码头</strong>
-            <span>下一页从这里走进去。</span>
+            <strong>{theme.hero.routeTitle}</strong>
+            <span>{theme.hero.routeText}</span>
           </div>
 
         {photos.length > 1 && (

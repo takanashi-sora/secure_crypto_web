@@ -1,10 +1,12 @@
 import { Camera, Check, ImagePlus, LoaderCircle, Trash2, UploadCloud } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { formatBytes, safeFileName } from '../lib/format';
+import type { GalleryTheme } from '../themes';
 import type { UploadCandidate, UploadResult } from '../types';
 
 interface UploadViewProps {
   connected: boolean;
+  theme: GalleryTheme;
   onUpload: (candidates: UploadCandidate[], progress: (done: number) => void) => Promise<UploadResult[]>;
 }
 
@@ -20,7 +22,7 @@ async function dimensions(file: File) {
   }
 }
 
-export function UploadView({ connected, onUpload }: UploadViewProps) {
+export function UploadView({ connected, theme, onUpload }: UploadViewProps) {
   const input = useRef<HTMLInputElement>(null);
   const [queue, setQueue] = useState<UploadCandidate[]>([]);
   const [dragging, setDragging] = useState(false);
@@ -79,8 +81,8 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
   return (
     <section className="page upload-page">
       <header className="page-heading split-heading">
-        <div><p className="eyebrow">BRING TODAY BACK</p><h1>把今天，<br />带回房间。</h1></div>
-        <p>像回到部室后把照片放到桌上：先在本机读取日期与尺寸，再安全写入私有仓库；GPS 信息不会被保存。</p>
+        <div><p className="eyebrow">{theme.upload.eyebrow}</p><h1>{theme.upload.title.split('\n').map((line, index) => <span key={line}>{line}{index < theme.upload.title.split('\n').length - 1 && <br />}</span>)}</h1></div>
+        <p>{theme.upload.note}</p>
       </header>
 
       <div className="upload-layout">
@@ -94,7 +96,7 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
             onDrop={(event) => { event.preventDefault(); setDragging(false); void addFiles(event.dataTransfer.files); }}
           >
             <span className="drop-camera"><Camera /></span>
-            <strong>把今天带回来的照片放到这里</strong>
+            <strong>{theme.upload.dropTitle}</strong>
             <small>拖拽或点击选择多张照片 · JPEG / PNG / WEBP / AVIF</small>
             <span className="button button-light"><ImagePlus size={17} /> 选择照片</span>
           </button>
@@ -114,12 +116,12 @@ export function UploadView({ connected, onUpload }: UploadViewProps) {
         </div>
 
         <aside className="upload-ticket">
-          <p>ROOM CHECK-IN</p>
-          <h2>放进<br />房间前</h2>
+          <p>{theme.upload.checkinLabel}</p>
+          <h2>{theme.upload.checkinTitle.split('\n').map((line, index) => <span key={line}>{line}{index < theme.upload.checkinTitle.split('\n').length - 1 && <br />}</span>)}</h2>
           <dl><div><dt>照片</dt><dd>{queue.length} 张</dd></div><div><dt>总大小</dt><dd>{formatBytes(queue.reduce((sum, item) => sum + item.file.size, 0))}</dd></div><div><dt>可见范围</dt><dd>仅自己</dd></div></dl>
           {!connected && <div className="notice warning">请先到设置连接私有仓库。</div>}
           <button className="button button-primary wide" disabled={!connected || !queue.length || uploading} onClick={start}>
-            {uploading ? <><LoaderCircle className="spin" /> 收进房间 {done}/{queue.length}</> : <><UploadCloud /> 放进照片墙</>}
+            {uploading ? <><LoaderCircle className="spin" /> {theme.upload.submitting} {done}/{queue.length}</> : <><UploadCloud /> {theme.upload.submit}</>}
           </button>
           {uploading && <div className="progress"><span style={{ width: `${queue.length ? (done / queue.length) * 100 : 0}%` }} /></div>}
           {!!results.length && (
