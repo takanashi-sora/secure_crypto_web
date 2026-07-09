@@ -1,6 +1,7 @@
 import { CloudAlert, Heart, MapPin } from 'lucide-react';
 import { displayDate } from '../lib/format';
 import type { PhotoAssetStore } from '../lib/github';
+import { DEFAULT_THEME, resolveTheme, type GalleryTheme } from '../themes';
 import type { AlbumRecord, PhotoRecord } from '../types';
 import { PhotoImage } from './PhotoImage';
 
@@ -11,13 +12,14 @@ interface PhotoGridProps {
   assets: PhotoAssetStore;
   albums?: AlbumRecord[];
   mode?: GalleryMode;
+  theme?: GalleryTheme;
   onOpen: (photo: PhotoRecord) => void;
   emptyMessage?: string;
 }
 
-export function PhotoGrid({ photos, assets, albums = [], mode = 'editorial', onOpen, emptyMessage }: PhotoGridProps) {
+export function PhotoGrid({ photos, assets, albums = [], mode = 'editorial', theme = DEFAULT_THEME, onOpen, emptyMessage }: PhotoGridProps) {
   if (!photos.length) {
-    return <div className="empty-state"><span>°｡⋆</span><h3>这面墙还没有照片</h3><p>{emptyMessage ?? '换个筛选条件，或把今天喜欢的一张贴上来。'}</p></div>;
+    return <div className="empty-state"><span>°｡⋆</span><h3>{theme.photoGrid.emptyTitle}</h3><p>{emptyMessage ?? theme.photoGrid.emptyDefault}</p></div>;
   }
 
   const albumNames = new Map(albums.map((album) => [album.id, album.title]));
@@ -27,15 +29,16 @@ export function PhotoGrid({ photos, assets, albums = [], mode = 'editorial', onO
       {photos.map((photo, index) => {
         const chapter = photo.albumIds?.map((id) => albumNames.get(id)).find(Boolean);
         const title = photo.title || photo.name.replace(/\.[^.]+$/, '');
-        const archiveDetails = [photo.location, chapter, photo.mood].filter(Boolean);
+        const photoTheme = resolveTheme(photo.themeId);
+        const archiveDetails = [photo.location, chapter, photo.mood, photo.themeId].filter(Boolean);
         return (
-          <article className={`record-card tone-${index % 4} card-shape-${index % 7}`} key={photo.path}>
+          <article className={`record-card tone-${index % 4} card-shape-${index % 7}`} data-photo-theme={photoTheme.id} key={photo.path}>
             <span className="record-wall-pin" aria-hidden="true" />
             <button className="record-photo" onClick={() => onOpen(photo)} aria-label={`查看 ${title}`}>
               <PhotoImage photo={photo} assets={assets} />
               <span className="photo-washi" />
               <span className="record-glimmer" />
-              <span className="memory-index">{mode === 'archive' ? String(index + 1).padStart(3, '0') : 'memo'}</span>
+              <span className="memory-index">{mode === 'archive' ? String(index + 1).padStart(3, '0') : theme.photoGrid.memoryBadge}</span>
               {photo.favorite && <Heart className="favorite-mark" size={17} fill="currentColor" />}
               {photo.metadataPending && <CloudAlert className="pending-mark" size={17} aria-label="元数据等待同步" />}
             </button>
@@ -47,6 +50,7 @@ export function PhotoGrid({ photos, assets, albums = [], mode = 'editorial', onO
                 !!archiveDetails.length && <div className="record-context">
                   {photo.location && <span><MapPin size={13} />{photo.location}</span>}
                   {chapter && <span>{chapter}</span>}
+                  {photo.themeId && <span>{photoTheme.shortName}</span>}
                   {photo.mood && <span className="mood-sticker">{photo.mood}</span>}
                 </div>
               )}

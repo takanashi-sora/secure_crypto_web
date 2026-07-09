@@ -3162,3 +3162,155 @@ svg { flex: 0 0 auto; }
     font-size: 16px;
   }
 }
+
+/* Theme system layer: theme config controls assets, palette, copy, and future locality packaging. */
+.site-shell {
+  --deep: var(--theme-deep, #113a59);
+  --deep-2: color-mix(in srgb, var(--theme-deep, #113a59) 78%, white);
+  --mikan: var(--theme-accent, #f4a34e);
+  --mikan-soft: var(--theme-accent-soft, #fff1d9);
+  --sky: var(--theme-water, #90d8f4);
+  --sky-soft: var(--theme-sky, #e5f8ff);
+  --violet: var(--theme-violet, #cbc7ff);
+  --cream: var(--theme-cream, #fffaf1);
+}
+.site-shell::before {
+  content: "";
+  position: fixed;
+  z-index: -3;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(248,253,255,.82), rgba(255,250,241,.7)),
+    var(--theme-room-bg) center / cover no-repeat;
+  opacity: .6;
+  filter: saturate(.92) blur(.2px);
+  pointer-events: none;
+}
+.theme-backdrop {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  object-fit: cover;
+  opacity: .2;
+  filter: blur(1px) saturate(.9);
+  mix-blend-mode: multiply;
+}
+.theme-motif {
+  position: absolute;
+  inset: 5px;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  object-fit: contain;
+  opacity: .55;
+  transform: rotate(2deg);
+}
+.brand-bay,
+.brand-wave,
+.brand-coast,
+.brand-star {
+  opacity: .88;
+}
+.theme-map-line {
+  position: absolute;
+  z-index: 2;
+  left: 88px;
+  right: 52px;
+  bottom: 92px;
+  width: calc(100% - 150px);
+  height: 110px;
+  object-fit: contain;
+  opacity: .42;
+  pointer-events: none;
+}
+.memory-hero {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.78), rgba(235,250,255,.55) 48%, rgba(255,248,234,.44)),
+    radial-gradient(circle at 72% 25%, color-mix(in srgb, var(--theme-accent) 34%, transparent), transparent 34%),
+    var(--theme-hero-bg) center / cover no-repeat;
+}
+.memory-hero::after {
+  background:
+    linear-gradient(90deg, transparent calc(50% - .5px), rgba(255,255,255,.7) 50%, transparent calc(50% + .5px)),
+    linear-gradient(180deg, transparent calc(50% - .5px), rgba(255,255,255,.66) 50%, transparent calc(50% + .5px)),
+    linear-gradient(180deg, rgba(226,248,255,.5), rgba(255,255,255,.14));
+}
+.coastline-art {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(221,247,255,.22)),
+    var(--theme-hero-bg) center / cover no-repeat;
+}
+.room-entrances {
+  background:
+    linear-gradient(140deg, rgba(255,255,255,.76), rgba(226,248,255,.56), rgba(255,250,241,.58)),
+    var(--theme-room-bg) center / cover no-repeat;
+}
+.room-card-photo,
+.room-card-route,
+.room-card-keepsake,
+.room-card-upload {
+  background-blend-mode: normal, screen;
+}
+.room-card-photo {
+  background:
+    radial-gradient(circle at 82% 16%, color-mix(in srgb, var(--theme-violet) 24%, transparent), transparent 28%),
+    linear-gradient(145deg, rgba(255,255,255,.7), color-mix(in srgb, var(--theme-sky) 62%, white));
+}
+.room-card-route {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 18px, color-mix(in srgb, var(--theme-water) 16%, transparent) 19px 20px),
+    rgba(255,255,255,.64);
+}
+.room-card-keepsake {
+  background:
+    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--theme-accent) 32%, transparent), transparent 30%),
+    color-mix(in srgb, var(--theme-cream) 80%, white);
+}
+.room-card-upload {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.68), color-mix(in srgb, var(--theme-violet) 30%, white));
+}
+.photo-grid.editorial {
+  background:
+    radial-gradient(circle at 8% 0, rgba(255,255,255,.84), transparent 30%),
+    linear-gradient(135deg, rgba(255,255,255,.5), color-mix(in srgb, var(--theme-sky) 40%, transparent), color-mix(in srgb, var(--theme-cream) 54%, transparent)),
+    var(--theme-room-bg) center / cover no-repeat;
+  background-blend-mode: normal, normal, screen;
+}
+.record-card[data-photo-theme="hakodate-snow"]::after { background: #9bbcff; }
+.record-card[data-photo-theme="kanazawa-town"]::after { background: #b88a54; }
+.record-card[data-photo-theme="kure-harbor"]::after { background: #d08d5a; }
+.record-card[data-photo-theme="kushiro-winter"]::after { background: #e2a064; }
+.editor-form select {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  color: var(--ink);
+  border: 1px solid rgba(56,126,160,.15);
+  border-radius: 14px;
+  background: rgba(255,255,255,.72);
+}
+.editor-form select:focus {
+  border-color: rgba(65,145,180,.36);
+  box-shadow: 0 0 0 4px rgba(95,181,217,.1);
+  outline: 0;
+}
+
+@media (max-width: 760px) {
+  .theme-backdrop {
+    opacity: .14;
+  }
+  .theme-map-line {
+    left: 18px;
+    right: 18px;
+    bottom: 60px;
+    width: calc(100% - 36px);
+    height: 76px;
+    opacity: .24;
+  }
+  .memory-hero {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.82), rgba(232,249,255,.6), rgba(255,250,241,.58)),
+      var(--theme-hero-bg) center / cover no-repeat;
+  }
+}

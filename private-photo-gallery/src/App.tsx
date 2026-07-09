@@ -10,6 +10,7 @@ import { Viewer } from './components/Viewer';
 import { GitHubApiError, GitHubRepositoryClient, PhotoAssetStore } from './lib/github';
 import { createEmptyManifest, getHeroPhotos, mergePhotos, removePhotoMetadata, updatePhotoMetadata } from './lib/manifest';
 import { clearStoredToken, loadSettings, saveSettings } from './lib/storage';
+import { DEFAULT_THEME } from './themes';
 import type {
   AlbumRecord,
   ConnectionState,
@@ -40,6 +41,7 @@ export default function App() {
   const [toast, setToast] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const activeTheme = DEFAULT_THEME;
 
   const client = useMemo(() => new GitHubRepositoryClient(settings), [settings]);
   const assets = useMemo(() => new PhotoAssetStore(client), [client]);
@@ -170,6 +172,7 @@ export default function App() {
               updatePhotoMetadata(next, photo.path, {
                 title: photo.title,
                 capturedAt: photo.capturedAt,
+                themeId: activeTheme.id,
                 width: photo.width,
                 height: photo.height,
               }),
@@ -184,6 +187,7 @@ export default function App() {
               updatePhotoMetadata(next, photo.path, {
                 title: photo.title,
                 capturedAt: photo.capturedAt,
+                themeId: activeTheme.id,
                 width: photo.width,
                 height: photo.height,
                 metadataPending: true,
@@ -200,7 +204,7 @@ export default function App() {
   };
 
   const createAlbum = async (title: string, description: string) => {
-    const album: AlbumRecord = { id: crypto.randomUUID(), title: title.trim(), description: description.trim(), createdAt: new Date().toISOString() };
+    const album: AlbumRecord = { id: crypto.randomUUID(), title: title.trim(), description: description.trim(), themeId: activeTheme.id, createdAt: new Date().toISOString() };
     const optimistic = { ...manifest, updatedAt: new Date().toISOString(), albums: [...manifest.albums, album] };
     setManifest(optimistic);
     try {
@@ -214,22 +218,22 @@ export default function App() {
   };
 
   return (
-    <Shell>
+    <Shell theme={activeTheme}>
       <AnimatePresence mode="wait">
         <motion.div key={location.pathname} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.32 }}>
           {connection === 'loading' && <div className="connection-banner"><LoaderCircle className="spin" /> 正在从私有仓库整理照片…</div>}
           {connection === 'error' && location.pathname !== '/settings' && <div className="connection-banner error"><AlertTriangle /> <span>{connectionError}</span><button onClick={() => navigate('/settings')}>检查设置</button><button onClick={() => void loadVault()} aria-label="重试"><RefreshCw /></button></div>}
           <Routes location={location}>
-            <Route path="/" element={<HomeView heroPhotos={heroPhotos} allPhotos={photos} albums={manifest.albums} assets={assets} state={connection} onOpen={(photo) => setSelectedPath(photo.path)} />} />
-            <Route path="/library" element={<LibraryView photos={photos} albums={manifest.albums} assets={assets} onOpen={(photo) => setSelectedPath(photo.path)} />} />
-            <Route path="/albums" element={<AlbumsView albums={manifest.albums} photos={photos} assets={assets} onOpen={(photo) => setSelectedPath(photo.path)} onCreate={createAlbum} />} />
-            <Route path="/upload" element={<UploadView connected={connection === 'connected'} onUpload={upload} />} />
+            <Route path="/" element={<HomeView heroPhotos={heroPhotos} allPhotos={photos} albums={manifest.albums} assets={assets} state={connection} theme={activeTheme} onOpen={(photo) => setSelectedPath(photo.path)} />} />
+            <Route path="/library" element={<LibraryView photos={photos} albums={manifest.albums} assets={assets} theme={activeTheme} onOpen={(photo) => setSelectedPath(photo.path)} />} />
+            <Route path="/albums" element={<AlbumsView albums={manifest.albums} photos={photos} assets={assets} theme={activeTheme} onOpen={(photo) => setSelectedPath(photo.path)} onCreate={createAlbum} />} />
+            <Route path="/upload" element={<UploadView connected={connection === 'connected'} theme={activeTheme} onUpload={upload} />} />
             <Route path="/settings" element={<SettingsView settings={settings} state={connection} error={connectionError} onSave={saveConnection} onDisconnect={disconnect} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </motion.div>
       </AnimatePresence>
-      <Viewer photo={selected} photos={photos} albums={manifest.albums} assets={assets} onClose={() => setSelectedPath('')} onSelect={(photo) => setSelectedPath(photo.path)} onSave={savePhoto} onDelete={deletePhoto} notify={notify} />
+      <Viewer photo={selected} photos={photos} albums={manifest.albums} assets={assets} theme={activeTheme} onClose={() => setSelectedPath('')} onSelect={(photo) => setSelectedPath(photo.path)} onSave={savePhoto} onDelete={deletePhoto} notify={notify} />
       <AnimatePresence>{toast && <motion.div className="toast" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }}><span>{toast}</span><button onClick={() => setToast('')} aria-label="关闭提示"><X /></button></motion.div>}</AnimatePresence>
     </Shell>
   );

@@ -1,5 +1,13 @@
 export type ConnectionState = 'idle' | 'loading' | 'connected' | 'error';
 
+export type ThemeId =
+  | 'numazu-seaside'
+  | 'hakodate-snow'
+  | 'kanazawa-town'
+  | 'kure-harbor'
+  | 'kushiro-winter'
+  | (string & {});
+
 export interface GallerySettings {
   token: string;
   owner: string;
@@ -14,6 +22,7 @@ export interface AlbumRecord {
   title: string;
   description: string;
   coverPath?: string;
+  themeId?: ThemeId;
   createdAt: string;
 }
 
@@ -24,6 +33,7 @@ export interface PhotoMetadata {
   mood?: string;
   tags?: string[];
   favorite?: boolean;
+  themeId?: ThemeId;
   capturedAt?: string;
   albumIds?: string[];
   width?: number;
